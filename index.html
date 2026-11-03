@@ -1,0 +1,2367 @@
+<!doctype html>
+<html lang="hu" data-finish="glossy">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Havi kiadások</title>
+<meta name="theme-color" content="#faf5e9">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Kiad&aacute;sok">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Comfortaa:wght@400;600;700&family=Lora:wght@400;600;700&family=Nunito:wght@400;600;700;800&family=Poppins:wght@400;600;700;800&display=swap">
+<style>
+  :root {
+    --bg: #faf5e9;
+    --card: #fffdf8;
+    --text: #1b2127;
+    --muted: #5f6670;
+    --accent: #1f6feb;
+    --accent-text: #ffffff;
+    --danger: #c92a2a;
+    --warn: #b35c00;
+    --ok: #2b8a3e;
+    --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --pattern: none;
+    --line: color-mix(in srgb, var(--bg), var(--text) 11%);
+    --soft: color-mix(in srgb, var(--bg), var(--text) 4%);
+    --accent-soft: color-mix(in srgb, var(--card), var(--accent) 14%);
+    --danger-soft: color-mix(in srgb, var(--card), var(--danger) 12%);
+    --warn-soft: color-mix(in srgb, var(--card), var(--warn) 14%);
+    --shadow: 0 1px 2px rgba(16, 24, 40, .06), 0 4px 14px rgba(16, 24, 40, .06);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #121519; --card: #1c2026; --text: #e8ecf0; --muted: #9aa5b1;
+      --accent: #5b9bff; --accent-text: #0b1220;
+      --danger: #ff7070; --warn: #ffb454; --ok: #5cc87a;
+      --shadow: 0 2px 10px rgba(0, 0, 0, .35);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #121519; --card: #1c2026; --text: #e8ecf0; --muted: #9aa5b1;
+    --accent: #5b9bff; --accent-text: #0b1220;
+    --danger: #ff7070; --warn: #ffb454; --ok: #5cc87a;
+    --shadow: 0 2px 10px rgba(0, 0, 0, .35);
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background-color: var(--bg);
+    background-image: var(--pattern);
+    background-attachment: fixed;
+    color: var(--text);
+    font: 18px/1.45 var(--font);
+  }
+  button, input, select { font: inherit; color: inherit; }
+  button { cursor: pointer; }
+  :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+  .wrap { max-width: 680px; margin: 0 auto; padding: 0 16px 120px; }
+
+  header.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 0 8px; }
+  .brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .logo {
+    width: 44px; height: 44px; flex: none; border-radius: 14px; display: grid; place-items: center; font-size: 1.4rem;
+    background: var(--accent); box-shadow: var(--shadow);
+  }
+  header.top h1 { font-size: 1.35rem; margin: 0; }
+  .settings-btn {
+    display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 16px;
+    border: 1px solid var(--line); border-radius: 999px; background: var(--card); box-shadow: var(--shadow);
+    font-weight: 700; white-space: nowrap;
+  }
+  .settings-btn .gear { font-size: 1.15em; line-height: 1; }
+
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 20px;
+    padding: 18px; margin: 14px 0; box-shadow: var(--shadow);
+  }
+  .card h2 { font-size: 1.1rem; margin: 0 0 12px; }
+
+  /* Fényes / matt felület */
+  [data-finish="glossy"] .card {
+    background-color: color-mix(in srgb, var(--card) 78%, transparent);
+    background-image: linear-gradient(180deg, color-mix(in srgb, var(--accent) 8%, transparent), transparent 150px);
+  }
+  [data-finish="matte"] .card { background-color: color-mix(in srgb, var(--card) 84%, transparent); }
+
+  /* Háttérkép: rögzített réteg a tartalom mögött (mobilon is a helyén marad görgetéskor) */
+  .scene-layer {
+    position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background-position: center; background-size: cover; background-repeat: no-repeat;
+  }
+  :root.has-scene .card {
+    background-color: color-mix(in srgb, var(--card) 86%, transparent);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  }
+  :root.has-scene .brand {
+    background: color-mix(in srgb, var(--card) 86%, transparent);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+    border: 1px solid var(--line); border-radius: 18px; padding: 6px 14px 6px 6px;
+  }
+  .bg-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .upload-btn { display: inline-flex; align-items: center; cursor: pointer; min-height: 48px; font-size: .95rem; }
+  .bg-actions .btn { min-height: 48px; font-size: .95rem; }
+  .tile .prev.scene { height: 72px; background-size: cover; background-position: center; }
+  [data-finish="glossy"] .btn.primary,
+  [data-finish="glossy"] .fab,
+  [data-finish="glossy"] .logo,
+  [data-finish="glossy"] .seg button[aria-pressed="true"],
+  [data-finish="glossy"] .tabs button[aria-selected="true"] {
+    background-image: linear-gradient(180deg, rgba(255, 255, 255, .34), rgba(255, 255, 255, 0) 60%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .45), 0 4px 14px color-mix(in srgb, var(--accent) 38%, transparent);
+  }
+  [data-finish="glossy"] .fill { background-image: linear-gradient(180deg, rgba(255, 255, 255, .35), rgba(255, 255, 255, 0)); }
+  [data-finish="matte"] { --shadow: none; }
+  [data-finish="matte"] .card, [data-finish="matte"] .settings-btn { box-shadow: none; }
+
+  /* Összesítő */
+  .month-nav { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .icon-btn {
+    width: 52px; height: 52px; flex: none; border: 1px solid var(--line); border-radius: 14px; background: var(--soft);
+    font-size: 1.5rem; line-height: 1; display: grid; place-items: center;
+  }
+  .icon-btn.sm { width: 44px; height: 44px; font-size: 1.1rem; }
+  .month-label { text-align: center; flex: 1; }
+  .month-label strong { display: block; font-size: 1.15rem; }
+  .link-btn { border: 0; background: none; color: var(--accent); padding: 4px 8px; font-size: .9rem; font-weight: 700; }
+  .totals { text-align: center; margin: 18px 0 6px; }
+  .totals .label { color: var(--muted); font-size: .95rem; }
+  .big { font-size: clamp(2.1rem, 9vw, 3rem); font-weight: 800; letter-spacing: -.02em; line-height: 1.15; font-variant-numeric: tabular-nums; }
+  .big.multi { font-size: clamp(1.7rem, 7vw, 2.3rem); }
+  .big.over { color: var(--danger); }
+  .hint { color: var(--muted); font-size: .88rem; }
+  .pill { display: inline-block; margin-top: 4px; padding: 2px 10px; border-radius: 999px; font-size: .8rem; font-weight: 700; background: var(--soft); color: var(--muted); }
+  .pill.closed { background: color-mix(in srgb, var(--card), var(--ok) 16%); color: var(--ok); }
+
+  /* Keret jelző */
+  .budget-box { display: grid; gap: 12px; margin-top: 14px; }
+  .budget { border-radius: 14px; padding: 12px 14px; background: var(--soft); }
+  .budget.warn { background: var(--warn-soft); }
+  .budget.over { background: var(--danger-soft); }
+  .budget-top { display: flex; justify-content: space-between; gap: 10px; font-size: .92rem; font-weight: 700; flex-wrap: wrap; }
+  .budget-top .nums { font-variant-numeric: tabular-nums; }
+  .budget .track { height: 14px; margin: 8px 0 6px; background: color-mix(in srgb, var(--card), var(--text) 8%); }
+  .budget .fill { background-color: var(--ok); }
+  .budget.warn .fill { background-color: var(--warn); }
+  .budget.over .fill { background-color: var(--danger); }
+  .budget-msg { font-size: .9rem; font-weight: 600; }
+  .budget.ok .budget-msg { color: var(--ok); }
+  .budget.warn .budget-msg { color: var(--warn); }
+  .budget.over .budget-msg { color: var(--danger); }
+  .budget-cta { text-align: center; }
+
+  /* Diagram */
+  .chart-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+  .chart-head h2 { margin: 0; }
+  .seg { display: inline-flex; flex-wrap: wrap; gap: 6px; }
+  .seg button {
+    min-height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--soft);
+    font-weight: 700; font-size: .95rem;
+  }
+  .seg button[aria-pressed="true"] { background-color: var(--accent); border-color: var(--accent); color: var(--accent-text); }
+  .bars { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  .bar-row .bar-top { display: flex; justify-content: space-between; gap: 10px; font-size: .97rem; }
+  .bar-row .bar-name { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .bar-row .bar-val { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .bar-row .bar-val .pct { color: var(--muted); margin-left: 6px; }
+  .bar-limit { font-size: .82rem; margin-top: 3px; font-weight: 600; color: var(--muted); }
+  .bar-limit.warn { color: var(--warn); }
+  .bar-limit.over { color: var(--danger); }
+  .track { height: 12px; background: var(--soft); border-radius: 999px; overflow: hidden; margin-top: 5px; }
+  .fill { height: 100%; border-radius: 999px; min-width: 4px; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; flex: none; }
+
+  /* Űrlap */
+  label.field, .field { display: block; font-weight: 700; font-size: .95rem; margin: 0 0 6px; }
+  .row { display: grid; grid-template-columns: 1fr auto; gap: 10px; }
+  .group { margin-bottom: 14px; }
+  input[type=text], input[type=date], input[type=search], select {
+    width: 100%; min-height: 54px; padding: 10px 14px; border: 1.5px solid var(--line); border-radius: 12px; background: var(--card);
+  }
+  input.amount { font-size: 1.4rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+  input[aria-invalid="true"] { border-color: var(--danger); }
+  select {
+    appearance: none; -webkit-appearance: none; padding-right: 36px;
+    background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+    background-position: calc(100% - 20px) 50%, calc(100% - 14px) 50%; background-size: 6px 6px, 6px 6px; background-repeat: no-repeat;
+  }
+  select.cur { min-width: 96px; font-weight: 700; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 14px; border-radius: 999px;
+    border: 1.5px solid var(--line); background: var(--card); font-size: .95rem;
+  }
+  .chip[aria-pressed="true"] { border-color: var(--c); background: color-mix(in srgb, var(--card), var(--c) 18%); font-weight: 800; }
+  .cat-hint { margin-top: 8px; font-size: .88rem; color: var(--muted); min-height: 1.3em; }
+  .error { background: var(--danger-soft); color: var(--danger); border-radius: 12px; padding: 10px 14px; font-weight: 700; margin-bottom: 12px; }
+  .btn { min-height: 56px; padding: 0 22px; border-radius: 14px; border: 1px solid transparent; font-weight: 800; font-size: 1.05rem; }
+  .btn.primary { background-color: var(--accent); color: var(--accent-text); width: 100%; }
+  .btn.secondary { background: var(--soft); border-color: var(--line); }
+  .btn.danger { background: var(--danger); color: #fff; }
+  .btn.danger-outline { background: transparent; border-color: var(--danger); color: var(--danger); width: 100%; }
+  .btn.full { width: 100%; }
+  .actions { display: flex; gap: 10px; }
+  .actions .btn.primary { flex: 1; }
+
+  /* Lista */
+  .list-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+  .list-head h2 { margin: 0; }
+  .filters { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+  .filters .search { grid-column: 1 / -1; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .items { list-style: none; margin: 0; padding: 0; }
+  .item { display: grid; grid-template-columns: auto 1fr auto; gap: 8px 12px; align-items: center; padding: 14px 0; border-top: 1px solid var(--line); }
+  .item:first-child { border-top: 0; }
+  .badge { width: 42px; height: 42px; flex: none; border-radius: 12px; display: grid; place-items: center; font-size: 1.25rem; background: color-mix(in srgb, var(--card), var(--c) 20%); }
+  .item .badge { align-self: start; }
+  .item .note { font-weight: 700; overflow-wrap: anywhere; }
+  .item .note.empty { color: var(--muted); font-weight: 400; font-style: italic; }
+  .item .meta { color: var(--muted); font-size: .88rem; }
+  .item .amt { font-weight: 800; text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; align-self: start; }
+  .item .ops { grid-column: 2 / -1; display: flex; gap: 8px; justify-content: flex-end; }
+  .small-btn { min-height: 40px; padding: 0 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--soft); font-size: .88rem; font-weight: 700; }
+  .small-btn.del { color: var(--danger); }
+  .empty-state { color: var(--muted); text-align: center; padding: 18px 0; }
+  .list-foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+
+  /* Havi összesítők */
+  .banner {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;
+    background: var(--accent-soft); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+    border-radius: 16px; padding: 12px 14px; margin-top: 8px;
+  }
+  .banner-text { flex: 1 1 220px; }
+  .banner-actions { display: flex; gap: 6px; }
+  .history { list-style: none; margin: 0; padding: 0; }
+  .history li + li { border-top: 1px solid var(--line); }
+  .hist-row { width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 8px; border: 0; background: none; text-align: left; border-radius: 10px; min-height: 56px; }
+  .hist-row:hover { background: var(--soft); }
+  .hist-row[aria-current="true"] { background: var(--accent-soft); }
+  .hist-row .hm { font-weight: 700; }
+  .hist-row .hm small { display: block; color: var(--muted); font-weight: 400; font-size: .85rem; }
+  .hist-row .hm small .overtag { color: var(--danger); font-weight: 700; }
+  .hist-row .ht { text-align: right; font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .hist-row .ht.none { color: var(--muted); font-weight: 400; }
+  .year-total { display: flex; justify-content: space-between; gap: 12px; padding: 12px 8px 0; border-top: 2px solid var(--line); margin-top: 4px; font-weight: 800; }
+  .year-total .vals { text-align: right; font-variant-numeric: tabular-nums; }
+
+  /* Felugró ablakok */
+  .overlay { position: fixed; inset: 0; background: rgba(10, 14, 20, .5); display: none; align-items: flex-end; justify-content: center; z-index: 50; padding: 12px; }
+  .overlay.open { display: flex; }
+  .sheet { background: var(--card); width: 100%; max-width: 560px; border-radius: 22px; padding: 18px; max-height: 92vh; overflow: auto; box-shadow: 0 10px 40px rgba(0, 0, 0, .25); }
+  @media (min-width: 640px) { .overlay { align-items: center; } }
+  .sheet h2 { margin: 0; font-size: 1.2rem; }
+  .sheet h3 { font-size: 1rem; margin: 18px 0 8px; }
+  .sheet .seg button { min-height: 46px; padding: 0 16px; font-size: 1rem; }
+  .sheet .actions { margin-top: 18px; }
+  .sheet-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; margin: 0 -4px; padding-left: 4px; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tabs button {
+    flex: none; min-height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--soft);
+    font-weight: 700; font-size: .95rem; white-space: nowrap;
+  }
+  .tabs button[aria-selected="true"] { background-color: var(--accent); color: var(--accent-text); border-color: var(--accent); }
+  .swatches { display: flex; flex-wrap: wrap; gap: 10px; }
+  .swatch {
+    width: 46px; height: 46px; border-radius: 50%; border: 2px solid var(--line); padding: 0; position: relative;
+  }
+  .swatch[aria-pressed="true"] { outline: 3px solid var(--text); outline-offset: 2px; }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 10px; }
+  .tile {
+    border: 1.5px solid var(--line); border-radius: 14px; padding: 0; overflow: hidden; background: var(--card); text-align: center; font-size: .85rem; font-weight: 700;
+  }
+  .tile .prev { display: block; height: 56px; border-bottom: 1px solid var(--line); }
+  .tile .lbl { display: block; padding: 6px 4px; }
+  .tile[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
+  .fonts { display: grid; gap: 8px; }
+  .font-opt { text-align: left; border: 1.5px solid var(--line); border-radius: 14px; background: var(--card); padding: 10px 14px; min-height: 56px; }
+  .font-opt b { display: block; font-size: 1.02rem; }
+  .font-opt span { color: var(--muted); font-size: .9rem; }
+  .font-opt[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
+  .cat-list { list-style: none; margin: 0; padding: 0; }
+  .cat-row { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-top: 1px solid var(--line); }
+  .cat-row:first-child { border-top: 0; }
+  .cat-row .nm { flex: 1; font-weight: 700; min-width: 0; overflow-wrap: anywhere; }
+  .cat-row .nm small { display: block; font-weight: 400; color: var(--muted); font-size: .82rem; }
+  .emoji-pick { display: flex; flex-wrap: wrap; gap: 6px; }
+  .emoji-pick button { width: 46px; height: 46px; border-radius: 12px; border: 1.5px solid var(--line); background: var(--soft); font-size: 1.3rem; padding: 0; }
+  .emoji-pick button[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); background: var(--accent-soft); }
+  .budget-row { display: grid; grid-template-columns: 1fr 150px; gap: 10px; align-items: center; padding: 6px 0; }
+  .budget-row .nm { display: flex; align-items: center; gap: 10px; font-weight: 600; min-width: 0; }
+  .budget-row .badge { width: 36px; height: 36px; font-size: 1.05rem; border-radius: 10px; }
+  .budget-row input { min-height: 48px; text-align: right; font-variant-numeric: tabular-nums; }
+  .budget-total input { font-weight: 800; font-size: 1.15rem; }
+
+  .fab {
+    position: fixed; right: 18px; bottom: calc(18px + env(safe-area-inset-bottom)); z-index: 40;
+    width: 64px; height: 64px; border-radius: 50%; border: 0; background-color: var(--accent); color: var(--accent-text);
+    font-size: 2rem; line-height: 1; box-shadow: 0 6px 18px rgba(0, 0, 0, .25);
+  }
+  .toast {
+    position: fixed; left: 50%; bottom: calc(96px + env(safe-area-inset-bottom)); transform: translateX(-50%);
+    background: var(--text); color: var(--bg); padding: 12px 18px; border-radius: 14px; font-weight: 700;
+    opacity: 0; pointer-events: none; transition: opacity .2s; z-index: 60; width: max-content; max-width: calc(100% - 32px); text-align: center;
+  }
+  .toast.show { opacity: 1; }
+  .toast.warn { background: var(--warn); color: #fff; }
+  .toast.danger { background: var(--danger); color: #fff; }
+  .warn-box { background: var(--danger-soft); color: var(--danger); padding: 10px 14px; border-radius: 12px; font-size: .9rem; }
+
+  @media (max-width: 420px) {
+    body { font-size: 17px; }
+    .card { padding: 16px; border-radius: 18px; }
+    .settings-btn .label-text { display: none; }
+    .budget-row { grid-template-columns: 1fr 120px; }
+  }
+</style>
+</head>
+<body>
+<div class="scene-layer" id="sceneLayer" aria-hidden="true"></div>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">💸</span>
+      <h1 data-i18n="appTitle">Havi kiadások</h1>
+    </div>
+    <button type="button" class="settings-btn" id="openSettings" aria-haspopup="dialog">
+      <span class="gear" aria-hidden="true">⚙</span>
+      <span class="label-text" data-i18n="settings">Beállítások</span>
+      <span id="settingsBadge">HU · HUF</span>
+    </button>
+  </header>
+
+  <div id="storageWarn" class="warn-box" hidden data-i18n="storageWarn"></div>
+
+  <!-- Hónapzárás értesítő -->
+  <div class="banner" id="closeBanner" role="status" hidden>
+    <div class="banner-text"><span id="bannerText"></span> <strong id="bannerTotals"></strong></div>
+    <div class="banner-actions">
+      <button type="button" class="small-btn" id="bannerView" data-i18n="view"></button>
+      <button type="button" class="small-btn" id="bannerClose" data-i18n-aria="dismiss" aria-label="">✕</button>
+    </div>
+  </div>
+
+  <!-- Havi összesítő -->
+  <section class="card" aria-labelledby="monthLabel">
+    <div class="month-nav">
+      <button type="button" class="icon-btn" id="prevMonth" data-i18n-aria="prevMonth" aria-label="">‹</button>
+      <div class="month-label">
+        <strong id="monthLabel"></strong>
+        <span class="pill" id="monthStatus" hidden></span>
+        <button type="button" class="link-btn" id="todayMonth" data-i18n="thisMonth" hidden></button>
+      </div>
+      <button type="button" class="icon-btn" id="nextMonth" data-i18n-aria="nextMonth" aria-label="">›</button>
+    </div>
+    <div class="totals">
+      <div class="label" data-i18n="totalSpent"></div>
+      <div id="totals"></div>
+      <div class="hint" id="multiHint" hidden data-i18n="perCurrencyHint"></div>
+    </div>
+    <div class="budget-box" id="budgetBox" aria-live="polite"></div>
+  </section>
+
+  <!-- Diagram -->
+  <section class="card" id="chartCard" aria-labelledby="chartTitle">
+    <div class="chart-head">
+      <h2 id="chartTitle" data-i18n="byCategory"></h2>
+      <div class="seg" id="chartCurrency" role="group" data-i18n-aria="chartCurrency"></div>
+    </div>
+    <ul class="bars" id="bars"></ul>
+    <p class="empty-state" id="chartEmpty" hidden data-i18n="noExpensesMonth"></p>
+  </section>
+
+  <!-- Űrlap -->
+  <section class="card" id="formCard" aria-labelledby="formTitle">
+    <h2 id="formTitle" data-i18n="newExpense"></h2>
+    <form id="form" novalidate autocomplete="off">
+      <div id="formError" class="error" role="alert" hidden></div>
+      <div class="group">
+        <label class="field" for="amount" data-i18n="amount"></label>
+        <div class="row">
+          <input type="text" id="amount" class="amount" inputmode="decimal" placeholder="0">
+          <select id="formCurrency" class="cur" data-i18n-aria="currency"></select>
+        </div>
+      </div>
+      <div class="group">
+        <label class="field" for="note" data-i18n="note"></label>
+        <input type="text" id="note" maxlength="200" data-i18n-placeholder="notePlaceholder">
+      </div>
+      <div class="group">
+        <label class="field" for="date" data-i18n="date"></label>
+        <input type="date" id="date">
+      </div>
+      <div class="group">
+        <div class="field" id="catLabel" data-i18n="category"></div>
+        <div class="chips" id="chips" role="group" aria-labelledby="catLabel"></div>
+        <div class="cat-hint" id="catHint" aria-live="polite"></div>
+      </div>
+      <div class="actions">
+        <button type="button" class="btn secondary" id="cancelEdit" data-i18n="cancel" hidden></button>
+        <button type="submit" class="btn primary" id="saveBtn" data-i18n="save"></button>
+      </div>
+    </form>
+  </section>
+
+  <!-- Lista -->
+  <section class="card" aria-labelledby="listTitle">
+    <div class="list-head">
+      <h2 id="listTitle" data-i18n="expenses"></h2>
+      <span class="hint" id="count"></span>
+    </div>
+    <div class="filters">
+      <div>
+        <label class="sr" for="fMonth" data-i18n="filterMonth"></label>
+        <select id="fMonth"></select>
+      </div>
+      <div>
+        <label class="sr" for="fCat" data-i18n="filterCategory"></label>
+        <select id="fCat"></select>
+      </div>
+      <div class="search">
+        <label class="sr" for="fSearch" data-i18n="search"></label>
+        <input type="search" id="fSearch" data-i18n-placeholder="searchPlaceholder">
+      </div>
+    </div>
+    <ul class="items" id="items"></ul>
+    <p class="empty-state" id="listEmpty" hidden data-i18n="noResults"></p>
+    <div class="list-foot">
+      <span></span>
+      <button type="button" class="btn secondary" id="exportBtn" data-i18n="exportCsv"></button>
+    </div>
+  </section>
+
+  <!-- Havi összesítők az elmúlt 12 hónapra -->
+  <section class="card" aria-labelledby="historyTitle">
+    <h2 id="historyTitle" data-i18n="history"></h2>
+    <p class="hint" data-i18n="historyHint" style="margin-top:-6px"></p>
+    <ul class="history" id="history"></ul>
+    <div class="year-total" id="yearTotal"></div>
+    <div class="list-foot">
+      <span></span>
+      <button type="button" class="btn secondary" id="exportMonthlyBtn" data-i18n="exportMonthly"></button>
+    </div>
+  </section>
+</div>
+
+<button type="button" class="fab" id="fab" data-i18n-aria="addExpense" aria-label="">+</button>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- Beállítások -->
+<div class="overlay" id="settingsOverlay">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+    <div class="sheet-head">
+      <h2 id="settingsTitle" data-i18n="settings"></h2>
+      <button type="button" class="icon-btn sm" id="closeSettingsX" data-i18n-aria="close" aria-label="">✕</button>
+    </div>
+    <div class="tabs" role="tablist" id="settingsTabs"></div>
+
+    <div class="tab-panel" data-panel="general" role="tabpanel">
+      <h3 data-i18n="language"></h3>
+      <div class="seg" id="langSeg" role="group"></div>
+      <h3 data-i18n="defaultCurrency"></h3>
+      <div class="seg" id="curSeg" role="group"></div>
+      <p class="hint" data-i18n="settingsNote"></p>
+    </div>
+
+    <div class="tab-panel" data-panel="look" role="tabpanel" hidden>
+      <h3 data-i18n="themeMode"></h3>
+      <div class="seg" id="themeSeg" role="group"></div>
+      <h3 data-i18n="accentColor"></h3>
+      <div class="swatches" id="accentSeg" role="group"></div>
+      <h3 data-i18n="finish"></h3>
+      <div class="seg" id="finishSeg" role="group"></div>
+      <h3 data-i18n="bgColor"></h3>
+      <div class="tiles" id="tintSeg" role="group"></div>
+      <h3 data-i18n="scene"></h3>
+      <div class="tiles" id="sceneSeg" role="group"></div>
+      <div class="bg-actions">
+        <label class="btn secondary upload-btn" for="bgFile" id="bgUploadLbl"></label>
+        <input type="file" id="bgFile" accept="image/*" class="sr">
+        <button type="button" class="btn secondary" id="bgRemove" data-i18n="removeBg" hidden></button>
+      </div>
+      <p class="hint" data-i18n="sceneHint"></p>
+      <h3 data-i18n="pattern"></h3>
+      <div class="tiles" id="patternSeg" role="group"></div>
+      <h3 data-i18n="font"></h3>
+      <div class="fonts" id="fontSeg" role="group"></div>
+    </div>
+
+    <div class="tab-panel" data-panel="categories" role="tabpanel" hidden>
+      <h3 data-i18n="catListTitle"></h3>
+      <ul class="cat-list" id="catList"></ul>
+      <h3 data-i18n="newCategory"></h3>
+      <div id="catError" class="error" role="alert" hidden></div>
+      <div class="group">
+        <label class="field" for="newCatName" data-i18n="catNameLabel"></label>
+        <input type="text" id="newCatName" maxlength="40" data-i18n-placeholder="catNamePh">
+      </div>
+      <div class="group">
+        <div class="field" data-i18n="catIconLabel"></div>
+        <div class="emoji-pick" id="newCatIcon" role="group"></div>
+      </div>
+      <div class="group">
+        <div class="field" data-i18n="catColorLabel"></div>
+        <div class="swatches" id="newCatColor" role="group"></div>
+      </div>
+      <div class="group">
+        <label class="field" for="newCatKw" data-i18n="catKwLabel"></label>
+        <input type="text" id="newCatKw" maxlength="300" data-i18n-placeholder="catKwPh">
+      </div>
+      <button type="button" class="btn primary" id="addCatBtn" data-i18n="addCategory"></button>
+    </div>
+
+    <div class="tab-panel" data-panel="budget" role="tabpanel" hidden>
+      <p class="hint" data-i18n="budgetIntro" style="margin-top:4px"></p>
+      <h3 data-i18n="budgetCurrency"></h3>
+      <div class="seg" id="budgetCurSeg" role="group"></div>
+      <h3 data-i18n="budgetTotal"></h3>
+      <div class="budget-row budget-total">
+        <label class="nm" for="budgetTotal" data-i18n="budget"></label>
+        <input type="text" id="budgetTotal" inputmode="decimal" data-budget="total" data-i18n-placeholder="budgetPh">
+      </div>
+      <h3 data-i18n="budgetPerCat"></h3>
+      <div id="budgetCats"></div>
+    </div>
+
+    <div class="tab-panel" data-panel="data" role="tabpanel" hidden>
+      <h3 data-i18n="backup"></h3>
+      <div class="actions" style="flex-direction:column;margin-top:0">
+        <button type="button" class="btn secondary full" id="exportBtn2" data-i18n="exportCsv"></button>
+        <button type="button" class="btn secondary full" id="exportMonthlyBtn2" data-i18n="exportMonthly"></button>
+      </div>
+      <h3 data-i18n="resetAll"></h3>
+      <p class="hint" data-i18n="resetHint" style="margin-top:0"></p>
+      <button type="button" class="btn danger-outline" id="resetBtn" data-i18n="resetAll"></button>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="btn primary" id="closeSettings" data-i18n="close"></button>
+    </div>
+  </div>
+</div>
+
+<!-- Megerősítés -->
+<div class="overlay" id="confirmOverlay">
+  <div class="sheet" role="alertdialog" aria-modal="true" aria-labelledby="confirmTitle" aria-describedby="confirmText">
+    <h2 id="confirmTitle" style="margin-bottom:12px"></h2>
+    <p id="confirmWhat" style="font-weight:700;margin:0 0 6px"></p>
+    <p id="confirmText" class="hint"></p>
+    <div class="actions">
+      <button type="button" class="btn secondary" id="confirmNo" data-i18n="cancel"></button>
+      <button type="button" class="btn danger" id="confirmYes" style="flex:1"></button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ---------- Alapadatok ----------
+  const LANGS = { hu: 'Magyar', en: 'English', de: 'Deutsch', fr: 'Français' };
+  const LOCALES = { hu: 'hu-HU', en: 'en-GB', de: 'de-DE', fr: 'fr-FR' };
+  const CURRENCIES = ['HUF', 'EUR', 'USD', 'GBP', 'CHF'];
+  const BUILTIN = ['food', 'dining', 'housing', 'transport', 'health', 'fun', 'clothing', 'other'];
+  const BUILTIN_COLORS = {
+    food: '#2b8a3e', dining: '#e8590c', housing: '#1c7ed6', transport: '#7048e8',
+    health: '#e03131', fun: '#f59f00', clothing: '#c2255c', other: '#868e96'
+  };
+  const BUILTIN_ICONS = {
+    food: '🛒', dining: '☕', housing: '🏠', transport: '🚌',
+    health: '💊', fun: '🎬', clothing: '👕', other: '📦'
+  };
+  const CUSTOM_ICONS = ['🐶', '🎁', '📚', '💼', '🏋️', '✈️', '🧸', '💇', '🛠️', '💻', '📱', '🎓', '🍷', '🌱', '❤️', '⭐'];
+  const CUSTOM_COLORS = ['#0c8599', '#5c940d', '#d9480f', '#9c36b5', '#1864ab', '#c92a2a', '#e67700', '#495057'];
+
+  // Megjelenés
+  const THEMES = ['auto', 'light', 'dark'];
+  const ACCENTS = { blue: '#1f6feb', green: '#2b8a3e', teal: '#0c8599', purple: '#7048e8', pink: '#d6336c', coral: '#e8590c', graphite: '#495057' };
+  const FINISHES = ['glossy', 'matte'];
+  // [világos háttér, világos kártya, sötét háttér, sötét kártya]
+  const TINTS = {
+    cream: ['#faf5e9', '#fffdf8', '#17150f', '#221f18'],
+    white: ['#f4f6f8', '#ffffff', '#121519', '#1c2026'],
+    mint: ['#edf7f1', '#fbfefc', '#0f1714', '#18231e'],
+    sky: ['#edf3fb', '#fbfdff', '#0f141b', '#18202a'],
+    lavender: ['#f3f0fa', '#fdfcff', '#14121b', '#1f1b29'],
+    peach: ['#fcefe7', '#fffaf7', '#1a1310', '#261d18'],
+    gray: ['#eceef1', '#fafbfc', '#161718', '#212325']
+  };
+  // Háttérminták: minden motívum egy kb. 40×40-es, origó köré rajzolt rajz.
+  // A „fill” motívumok kitöltött lenyomatok, a többi vonalrajz.
+  const MOTIFS = {
+    flowers: '<circle r="4"/>' + [0, 72, 144, 216, 288].map(a => `<ellipse cx="0" cy="-10" rx="5" ry="7" transform="rotate(${a})"/>`).join(''),
+    leaves: '<path d="M0 18 C-14 6 -12 -12 0 -18 C12 -12 14 6 0 18 Z"/><path d="M0 18 V-13 M0 5 L-6 -1 M0 -4 L6 -10"/>',
+    mountains: '<path d="M-20 14 L-6 -8 L2 4 L8 -4 L20 14 Z"/><path d="M-10 -2 L-6 -8 L-2 -2"/><circle cx="12" cy="-13" r="4"/>',
+    hands: { fill: true, body: '<rect x="-10" y="-3" width="20" height="19" rx="8"/><rect x="-11" y="-17" width="5" height="15" rx="2.5"/><rect x="-5" y="-21" width="5" height="18" rx="2.5"/><rect x="1" y="-20" width="5" height="17" rx="2.5"/><rect x="7" y="-15" width="4.5" height="13" rx="2.25"/><rect x="-19" y="-1" width="5" height="13" rx="2.5" transform="rotate(-35 -16.5 5.5)"/>' },
+    feet: { fill: true, body: '<path d="M-6 -6 C-9 2 -8 14 -2 18 C4 20 8 14 7 4 C6 -2 6 -6 2 -8 Z"/><circle cx="-5" cy="-12" r="3"/><circle cx="0" cy="-14" r="2.4"/><circle cx="4.5" cy="-13" r="2.1"/><circle cx="8" cy="-10.5" r="1.8"/><circle cx="10" cy="-7" r="1.5"/>' },
+    paws: { fill: true, body: '<path d="M0 2 C8 2 12 10 9 14 C6 17 3 14 0 14 C-3 14 -6 17 -9 14 C-12 10 -8 2 0 2 Z"/><ellipse cx="-11" cy="-4" rx="3.5" ry="4.5"/><ellipse cx="-4.5" cy="-11" rx="3.5" ry="4.8"/><ellipse cx="4.5" cy="-11" rx="3.5" ry="4.8"/><ellipse cx="11" cy="-4" rx="3.5" ry="4.5"/>' },
+    pencils: '<path d="M-16 10 L8 -14 L14 -8 L-10 16 Z"/><path d="M-16 10 L-19 19 L-10 16"/><path d="M4 -10 L10 -4"/>',
+    glasses: '<circle cx="-9" cy="0" r="6.5"/><circle cx="9" cy="0" r="6.5"/><path d="M-2.5 -1 Q0 -4 2.5 -1 M-15.5 -1 L-20 -6 M15.5 -1 L20 -6"/>',
+    phones: '<rect x="-8" y="-15" width="16" height="30" rx="3.5"/><path d="M-3 -11.5 H3"/><circle cx="0" cy="10.5" r="1.6"/>',
+    planets: '<circle r="8"/><ellipse rx="17" ry="5" transform="rotate(-20)"/><path d="M15 -15 l1.2 2.8 2.8 1.2 -2.8 1.2 -1.2 2.8 -1.2 -2.8 -2.8 -1.2 2.8 -1.2 Z"/>',
+    rockets: '<path d="M0 -18 C7 -10 7 4 4 10 H-4 C-7 4 -7 -10 0 -18 Z"/><circle cy="-6" r="3"/><path d="M-4 3 L-10 12 L-4 10 M4 3 L10 12 L4 10 M-2 13 L0 19 L2 13"/>',
+    moon: '<path d="M4 -14 A15 15 0 1 0 4 14 A11 11 0 1 1 4 -14 Z"/><path d="M13 -12 l1.5 3.5 3.5 1.5 -3.5 1.5 -1.5 3.5 -1.5 -3.5 -3.5 -1.5 3.5 -1.5 Z M14 8 l1 2.2 2.2 1 -2.2 1 -1 2.2 -1 -2.2 -2.2 -1 2.2 -1 Z"/>',
+    coffee: '<path d="M-12 -4 H8 V6 C8 13 4 16 -2 16 C-8 16 -12 13 -12 6 Z"/><path d="M8 -1 C14 -1 14 8 8 8 M-6 -8 C-9 -12 -3 -14 -6 -18 M1 -8 C-2 -12 4 -14 1 -18"/>',
+    clouds: '<path d="M-14 8 C-20 8 -20 -2 -13 -2 C-12 -10 -2 -12 2 -6 C6 -12 16 -8 14 0 C20 0 20 8 14 8 Z"/>',
+    plants: '<path d="M-8 4 H8 L6 16 H-6 Z"/><path d="M0 4 C0 -6 -10 -8 -12 -15 C-4 -15 0 -8 0 4 M0 4 C0 -4 8 -6 12 -13 C4 -13 0 -6 0 2"/>'
+  };
+  const PATTERNS = ['none', ...Object.keys(MOTIFS)];
+  const SCENES = ['neon', 'autumn', 'roses', 'moon', 'stars', 'snow', 'aurora', 'sunset', 'sakura'];
+  const FONTS = {
+    system: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+    nunito: '"Nunito", system-ui, -apple-system, "Segoe UI", sans-serif',
+    poppins: '"Poppins", system-ui, -apple-system, "Segoe UI", sans-serif',
+    lora: '"Lora", Georgia, "Times New Roman", serif',
+    comfortaa: '"Comfortaa", system-ui, -apple-system, "Segoe UI", sans-serif',
+    atkinson: '"Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif'
+  };
+  const DEFAULT_SETTINGS = { lang: 'hu', currency: 'HUF', theme: 'auto', accent: 'blue', finish: 'glossy', bgTint: 'cream', pattern: 'flowers', scene: 'none', font: 'nunito' };
+
+  const I18N = {
+    hu: {
+      appTitle: 'Havi kiadások', settings: 'Beállítások', language: 'Nyelv', currency: 'Pénznem',
+      defaultCurrency: 'Alapértelmezett pénznem',
+      settingsNote: 'A pénznem váltása nem módosítja a korábban rögzített tételeket.',
+      close: 'Kész', prevMonth: 'Előző hónap', nextMonth: 'Következő hónap', thisMonth: 'Ugrás az aktuális hónapra',
+      totalSpent: 'Összes kiadás', noExpensesMonth: 'Ebben a hónapban még nincs kiadás.',
+      byCategory: 'Kategóriák szerint', chartCurrency: 'Diagram pénzneme',
+      perCurrencyHint: 'Pénznemenként külön összesítve, átváltás nélkül.',
+      newExpense: 'Új kiadás', editExpense: 'Kiadás szerkesztése',
+      amount: 'Összeg', date: 'Dátum', note: 'Jegyzet', notePlaceholder: 'pl. bevásárlás a Lidlben', category: 'Kategória',
+      catAuto: 'Automatikusan felismerve – koppints másikra, ha módosítanád.',
+      catLearned: 'Korábbi választásod alapján ajánlva.',
+      catManual: 'Kézzel kiválasztva.',
+      catNone: 'Nincs felismert kategória – szükség esetén válassz.',
+      catSaved: 'Mentett kategória.',
+      save: 'Mentés', saveChanges: 'Változások mentése', cancel: 'Mégse',
+      saved: 'Kiadás elmentve.', updated: 'Módosítás elmentve.', deleted: 'Kiadás törölve.',
+      errEmpty: 'Add meg az összeget.',
+      errInvalid: 'Érvénytelen összeg. Pozitív számot adj meg, pl. 12500 vagy 12,50.',
+      errDate: 'Adj meg egy érvényes dátumot.',
+      expenses: 'Kiadások', filterMonth: 'Hónap', allMonths: 'Minden hónap',
+      filterCategory: 'Kategória', allCategories: 'Minden kategória',
+      search: 'Keresés a jegyzetekben', searchPlaceholder: 'Keresés a jegyzetekben…',
+      noResults: 'Nincs a szűrésnek megfelelő kiadás.',
+      edit: 'Szerkesztés', delete: 'Törlés',
+      confirmDeleteTitle: 'Biztosan törlöd ezt a kiadást?', confirmDeleteText: 'A törlés nem vonható vissza.',
+      confirmDelete: 'Igen, törlöm',
+      exportCsv: 'Exportálás CSV-be', exportEmpty: 'Még nincs exportálható kiadás.', exported: 'CSV-fájl letöltve.',
+      items: n => `${n} tétel`, addExpense: 'Új kiadás rögzítése', noNote: '(nincs jegyzet)',
+      storageWarn: 'A böngésző nem engedi az adatok mentését – újratöltéskor elveszhetnek.',
+      history: 'Havi összesítők – elmúlt 12 hónap', historyHint: 'Koppints egy hónapra a részletekért. A régebbi adatok sem törlődnek.',
+      closed: 'Lezárva', inProgress: 'Folyamatban', closedMonth: 'Lezárt hónap – végleges összeg', noSpending: 'Nincs kiadás',
+      monthClosed: m => `${m}: a hónap lezárult. Összes kiadás:`, view: 'Megnézem', dismiss: 'Értesítés bezárása',
+      yearTotal: '12 hónap összesen', exportMonthly: 'Havi összesítők CSV-be',
+      backup: 'Biztonsági mentés', resetAll: 'Minden adat nullázása',
+      resetHint: 'Törli az összes rögzített kiadást, a saját kategóriákat, a kereteket és a megtanult kategóriákat. A nyelv, a pénznem és a megjelenés beállítása megmarad.',
+      resetTitle: 'Biztosan nullázol mindent?',
+      resetText: n => `${n} tétel végleg törlődik, és ez nem vonható vissza. Előtte érdemes CSV-be exportálni.`,
+      resetYes: 'Igen, mindent törlök', resetDone: 'Minden adat törölve.',
+      tabGeneral: 'Általános', tabLook: 'Megjelenés', tabCategories: 'Kategóriák', tabBudget: 'Keretek', tabData: 'Adatok',
+      themeMode: 'Mód', themes: { auto: 'Automatikus', light: 'Világos', dark: 'Sötét' },
+      accentColor: 'Kiemelő szín',
+      accents: { blue: 'Kék', green: 'Zöld', teal: 'Türkiz', purple: 'Lila', pink: 'Rózsaszín', coral: 'Korall', graphite: 'Grafit' },
+      finish: 'Felület', finishes: { glossy: 'Fényes', matte: 'Matt' },
+      bgColor: 'Háttérszín',
+      tints: { cream: 'Krém', white: 'Fehér', mint: 'Menta', sky: 'Égkék', lavender: 'Levendula', peach: 'Barack', gray: 'Szürke' },
+      pattern: 'Háttérminta',
+      patterns: { none: 'Nincs', flowers: 'Virágok', leaves: 'Levelek', mountains: 'Hegyek', hands: 'Tenyérnyomok', feet: 'Lábnyomok',
+                  paws: 'Mancsok', pencils: 'Ceruzák', glasses: 'Szemüvegek', phones: 'Telefonok', planets: 'Bolygók', rockets: 'Rakéták',
+                  moon: 'Hold és csillagok', coffee: 'Kávé', clouds: 'Felhők', plants: 'Cserepes növények' },
+      font: 'Betűtípus',
+      fonts: { system: 'Rendszer', nunito: 'Kerek', poppins: 'Modern', lora: 'Elegáns', comfortaa: 'Játékos', atkinson: 'Jól olvasható' },
+      fontSample: 'Árvíztűrő tükörfúrógép 123',
+      scene: 'Háttérkép',
+      scenes: { none: 'Nincs', neon: 'Neon örvények', autumn: 'Őszi levelek', roses: 'Akvarell rózsák', moon: 'Holdfényes macska',
+                stars: 'Csillagos ég', snow: 'Hópelyhek', aurora: 'Sarki fény', sunset: 'Naplemente', sakura: 'Cseresznyevirág', custom: 'Saját kép' },
+      sceneHint: 'Háttérkép mellett a háttérminta nem látszik. Ha mintát választasz, a háttérkép kikapcsol.',
+      uploadBg: '📷 Saját kép feltöltése', replaceBg: '📷 Másik saját kép', removeBg: 'Saját kép törlése',
+      bgSaved: 'Háttérkép beállítva.', bgRemoved: 'Saját kép törölve.',
+      bgError: 'A képet nem sikerült betölteni. Próbálj egy JPG vagy PNG fájlt.', bgTooLarge: 'A kép túl nagy a tároláshoz. Válassz kisebb képet.',
+      catListTitle: 'Kategóriáid', builtIn: 'beépített', customTag: 'saját',
+      newCategory: 'Új kategória', catNameLabel: 'Név', catNamePh: 'pl. Háziállat', catIconLabel: 'Ikon', catColorLabel: 'Szín',
+      catKwLabel: 'Kulcsszavak (vesszővel elválasztva, nem kötelező)', catKwPh: 'pl. kutya, állatorvos, Fressnapf',
+      addCategory: 'Kategória hozzáadása', catAdded: 'Kategória hozzáadva.',
+      errCatName: 'Adj nevet a kategóriának.', errCatExists: 'Már van ilyen nevű kategória.',
+      confirmCatDeleteTitle: name => `Törlöd a(z) „${name}” kategóriát?`,
+      confirmCatDeleteText: n => `${n} tétel átkerül az Egyéb kategóriába.`, catDeleted: 'Kategória törölve.',
+      budgetIntro: 'Állíts be havi keretet. A keret 80%-ánál sárga figyelmeztetést, túllépéskor piros jelzést kapsz.',
+      budgetCurrency: 'Pénznem', budgetTotal: 'Teljes havi keret', budgetPerCat: 'Keret kategóriánként (nem kötelező)',
+      budgetPh: 'nincs keret', budgetSaved: 'Keret elmentve.',
+      budget: 'Havi keret', setBudget: 'Havi keret beállítása', limitShort: 'Keret',
+      budgetOk: rem => `Rendben – még ${rem} maradt.`,
+      budgetWarn: (pct, rem) => `Figyelem: elérted a keret ${pct}-át, már csak ${rem} maradt.`,
+      budgetOver: over => `Túllépted a keretet! Túllépés: ${over}.`,
+      alertTotalWarn: cur => `Figyelem: elérted a havi ${cur} keret 80%-át.`,
+      alertTotalOver: (cur, over) => `Túllépted a havi ${cur} keretet! Túllépés: ${over}.`,
+      alertCatWarn: name => `Figyelem: a(z) „${name}” kategória kerete hamarosan elfogy.`,
+      alertCatOver: (name, over) => `A(z) „${name}” kategória kerete túllépve: ${over}.`,
+      overBudget: 'keret felett',
+      cats: { food: 'Élelmiszer', dining: 'Étterem és kávézó', housing: 'Lakhatás és rezsi', transport: 'Közlekedés',
+              health: 'Egészség', fun: 'Szórakozás', clothing: 'Ruházat', other: 'Egyéb' }
+    },
+    en: {
+      appTitle: 'Monthly expenses', settings: 'Settings', language: 'Language', currency: 'Currency',
+      defaultCurrency: 'Default currency',
+      settingsNote: 'Changing the currency does not modify expenses you have already recorded.',
+      close: 'Done', prevMonth: 'Previous month', nextMonth: 'Next month', thisMonth: 'Go to current month',
+      totalSpent: 'Total spent', noExpensesMonth: 'No expenses this month yet.',
+      byCategory: 'By category', chartCurrency: 'Chart currency',
+      perCurrencyHint: 'Totals are shown separately per currency, without conversion.',
+      newExpense: 'New expense', editExpense: 'Edit expense',
+      amount: 'Amount', date: 'Date', note: 'Note', notePlaceholder: 'e.g. groceries at Lidl', category: 'Category',
+      catAuto: 'Detected automatically – tap another one to change it.',
+      catLearned: 'Suggested from your earlier choice.',
+      catManual: 'Chosen by you.',
+      catNone: 'No category recognised – pick one if you like.',
+      catSaved: 'Saved category.',
+      save: 'Save', saveChanges: 'Save changes', cancel: 'Cancel',
+      saved: 'Expense saved.', updated: 'Changes saved.', deleted: 'Expense deleted.',
+      errEmpty: 'Please enter an amount.',
+      errInvalid: 'Invalid amount. Enter a positive number, e.g. 12500 or 12.50.',
+      errDate: 'Please enter a valid date.',
+      expenses: 'Expenses', filterMonth: 'Month', allMonths: 'All months',
+      filterCategory: 'Category', allCategories: 'All categories',
+      search: 'Search notes', searchPlaceholder: 'Search notes…',
+      noResults: 'No expenses match the filters.',
+      edit: 'Edit', delete: 'Delete',
+      confirmDeleteTitle: 'Delete this expense?', confirmDeleteText: 'This cannot be undone.',
+      confirmDelete: 'Yes, delete',
+      exportCsv: 'Export to CSV', exportEmpty: 'There are no expenses to export yet.', exported: 'CSV file downloaded.',
+      items: n => (n === 1 ? '1 item' : `${n} items`), addExpense: 'Add expense', noNote: '(no note)',
+      storageWarn: 'Your browser blocks saving – data may be lost when you reload.',
+      history: 'Monthly totals – last 12 months', historyHint: 'Tap a month for details. Older data is never deleted.',
+      closed: 'Closed', inProgress: 'In progress', closedMonth: 'Closed month – final total', noSpending: 'No expenses',
+      monthClosed: m => `${m} is closed. Total spent:`, view: 'View', dismiss: 'Dismiss notice',
+      yearTotal: '12-month total', exportMonthly: 'Monthly totals to CSV',
+      backup: 'Backup', resetAll: 'Reset all data',
+      resetHint: 'Deletes all recorded expenses, custom categories, budgets and learned categories. Your language, currency and appearance settings are kept.',
+      resetTitle: 'Reset everything?',
+      resetText: n => `${n === 1 ? '1 item' : n + ' items'} will be permanently deleted. This cannot be undone. Consider exporting to CSV first.`,
+      resetYes: 'Yes, delete everything', resetDone: 'All data deleted.',
+      tabGeneral: 'General', tabLook: 'Appearance', tabCategories: 'Categories', tabBudget: 'Budgets', tabData: 'Data',
+      themeMode: 'Mode', themes: { auto: 'Automatic', light: 'Light', dark: 'Dark' },
+      accentColor: 'Accent colour',
+      accents: { blue: 'Blue', green: 'Green', teal: 'Teal', purple: 'Purple', pink: 'Pink', coral: 'Coral', graphite: 'Graphite' },
+      finish: 'Finish', finishes: { glossy: 'Glossy', matte: 'Matte' },
+      bgColor: 'Background colour',
+      tints: { cream: 'Cream', white: 'White', mint: 'Mint', sky: 'Sky', lavender: 'Lavender', peach: 'Peach', gray: 'Grey' },
+      pattern: 'Background pattern',
+      patterns: { none: 'None', flowers: 'Flowers', leaves: 'Leaves', mountains: 'Mountains', hands: 'Handprints', feet: 'Footprints',
+                  paws: 'Paw prints', pencils: 'Pencils', glasses: 'Glasses', phones: 'Phones', planets: 'Planets', rockets: 'Rockets',
+                  moon: 'Moon & stars', coffee: 'Coffee', clouds: 'Clouds', plants: 'Potted plants' },
+      font: 'Font',
+      fonts: { system: 'System', nunito: 'Rounded', poppins: 'Modern', lora: 'Elegant', comfortaa: 'Playful', atkinson: 'Easy to read' },
+      fontSample: 'The quick brown fox 123',
+      scene: 'Background image',
+      scenes: { none: 'None', neon: 'Neon swirls', autumn: 'Autumn leaves', roses: 'Watercolour roses', moon: 'Moonlight cat',
+                stars: 'Starry sky', snow: 'Snowflakes', aurora: 'Northern lights', sunset: 'Sunset', sakura: 'Cherry blossom', custom: 'Your image' },
+      sceneHint: 'With a background image, the pattern is hidden. Picking a pattern turns the image off.',
+      uploadBg: '📷 Upload your own image', replaceBg: '📷 Choose another image', removeBg: 'Remove your image',
+      bgSaved: 'Background image set.', bgRemoved: 'Your image was removed.',
+      bgError: 'The image could not be loaded. Try a JPG or PNG file.', bgTooLarge: 'The image is too large to store. Choose a smaller one.',
+      catListTitle: 'Your categories', builtIn: 'built-in', customTag: 'custom',
+      newCategory: 'New category', catNameLabel: 'Name', catNamePh: 'e.g. Pets', catIconLabel: 'Icon', catColorLabel: 'Colour',
+      catKwLabel: 'Keywords (comma-separated, optional)', catKwPh: 'e.g. dog, vet, pet shop',
+      addCategory: 'Add category', catAdded: 'Category added.',
+      errCatName: 'Please give the category a name.', errCatExists: 'A category with this name already exists.',
+      confirmCatDeleteTitle: name => `Delete the “${name}” category?`,
+      confirmCatDeleteText: n => `${n === 1 ? '1 item' : n + ' items'} will be moved to Other.`, catDeleted: 'Category deleted.',
+      budgetIntro: 'Set a monthly budget. At 80% of the budget you get a yellow warning, and a red alert when you go over.',
+      budgetCurrency: 'Currency', budgetTotal: 'Total monthly budget', budgetPerCat: 'Budget per category (optional)',
+      budgetPh: 'no budget', budgetSaved: 'Budget saved.',
+      budget: 'Monthly budget', setBudget: 'Set a monthly budget', limitShort: 'Budget',
+      budgetOk: rem => `On track – ${rem} left.`,
+      budgetWarn: (pct, rem) => `Heads up: you have used ${pct} of your budget, only ${rem} left.`,
+      budgetOver: over => `Over budget by ${over}!`,
+      alertTotalWarn: cur => `Heads up: you have reached 80% of your monthly ${cur} budget.`,
+      alertTotalOver: (cur, over) => `You are over your monthly ${cur} budget by ${over}!`,
+      alertCatWarn: name => `Heads up: the “${name}” budget is almost used up.`,
+      alertCatOver: (name, over) => `The “${name}” budget is exceeded by ${over}.`,
+      overBudget: 'over budget',
+      cats: { food: 'Groceries', dining: 'Restaurants & cafés', housing: 'Housing & utilities', transport: 'Transport',
+              health: 'Health', fun: 'Entertainment', clothing: 'Clothing', other: 'Other' }
+    },
+    de: {
+      appTitle: 'Monatsausgaben', settings: 'Einstellungen', language: 'Sprache', currency: 'Währung',
+      defaultCurrency: 'Standardwährung',
+      settingsNote: 'Ein Währungswechsel ändert bereits erfasste Ausgaben nicht.',
+      close: 'Fertig', prevMonth: 'Vorheriger Monat', nextMonth: 'Nächster Monat', thisMonth: 'Zum aktuellen Monat',
+      totalSpent: 'Ausgaben gesamt', noExpensesMonth: 'In diesem Monat gibt es noch keine Ausgaben.',
+      byCategory: 'Nach Kategorie', chartCurrency: 'Währung des Diagramms',
+      perCurrencyHint: 'Summen werden je Währung getrennt angezeigt, ohne Umrechnung.',
+      newExpense: 'Neue Ausgabe', editExpense: 'Ausgabe bearbeiten',
+      amount: 'Betrag', date: 'Datum', note: 'Notiz', notePlaceholder: 'z. B. Einkauf bei Lidl', category: 'Kategorie',
+      catAuto: 'Automatisch erkannt – tippe zum Ändern auf eine andere.',
+      catLearned: 'Vorgeschlagen anhand deiner früheren Wahl.',
+      catManual: 'Von dir gewählt.',
+      catNone: 'Keine Kategorie erkannt – wähle bei Bedarf eine aus.',
+      catSaved: 'Gespeicherte Kategorie.',
+      save: 'Speichern', saveChanges: 'Änderungen speichern', cancel: 'Abbrechen',
+      saved: 'Ausgabe gespeichert.', updated: 'Änderungen gespeichert.', deleted: 'Ausgabe gelöscht.',
+      errEmpty: 'Bitte gib einen Betrag ein.',
+      errInvalid: 'Ungültiger Betrag. Gib eine positive Zahl ein, z. B. 12500 oder 12,50.',
+      errDate: 'Bitte gib ein gültiges Datum ein.',
+      expenses: 'Ausgaben', filterMonth: 'Monat', allMonths: 'Alle Monate',
+      filterCategory: 'Kategorie', allCategories: 'Alle Kategorien',
+      search: 'In Notizen suchen', searchPlaceholder: 'In Notizen suchen…',
+      noResults: 'Keine Ausgaben entsprechen den Filtern.',
+      edit: 'Bearbeiten', delete: 'Löschen',
+      confirmDeleteTitle: 'Diese Ausgabe wirklich löschen?', confirmDeleteText: 'Das kann nicht rückgängig gemacht werden.',
+      confirmDelete: 'Ja, löschen',
+      exportCsv: 'Als CSV exportieren', exportEmpty: 'Noch keine Ausgaben zum Exportieren.', exported: 'CSV-Datei heruntergeladen.',
+      items: n => (n === 1 ? '1 Eintrag' : `${n} Einträge`), addExpense: 'Ausgabe hinzufügen', noNote: '(keine Notiz)',
+      storageWarn: 'Dein Browser blockiert das Speichern – Daten können beim Neuladen verloren gehen.',
+      history: 'Monatssummen – letzte 12 Monate', historyHint: 'Tippe auf einen Monat für Details. Ältere Daten werden nicht gelöscht.',
+      closed: 'Abgeschlossen', inProgress: 'Laufend', closedMonth: 'Abgeschlossener Monat – Endsumme', noSpending: 'Keine Ausgaben',
+      monthClosed: m => `${m} ist abgeschlossen. Ausgaben gesamt:`, view: 'Ansehen', dismiss: 'Hinweis schließen',
+      yearTotal: 'Summe 12 Monate', exportMonthly: 'Monatssummen als CSV',
+      backup: 'Sicherung', resetAll: 'Alle Daten zurücksetzen',
+      resetHint: 'Löscht alle erfassten Ausgaben, eigenen Kategorien, Budgets und gelernten Kategorien. Sprache, Währung und Aussehen bleiben erhalten.',
+      resetTitle: 'Wirklich alles zurücksetzen?',
+      resetText: n => `${n === 1 ? '1 Eintrag wird' : n + ' Einträge werden'} endgültig gelöscht. Das kann nicht rückgängig gemacht werden. Exportiere vorher am besten als CSV.`,
+      resetYes: 'Ja, alles löschen', resetDone: 'Alle Daten gelöscht.',
+      tabGeneral: 'Allgemein', tabLook: 'Aussehen', tabCategories: 'Kategorien', tabBudget: 'Budgets', tabData: 'Daten',
+      themeMode: 'Modus', themes: { auto: 'Automatisch', light: 'Hell', dark: 'Dunkel' },
+      accentColor: 'Akzentfarbe',
+      accents: { blue: 'Blau', green: 'Grün', teal: 'Petrol', purple: 'Lila', pink: 'Rosa', coral: 'Koralle', graphite: 'Graphit' },
+      finish: 'Oberfläche', finishes: { glossy: 'Glänzend', matte: 'Matt' },
+      bgColor: 'Hintergrundfarbe',
+      tints: { cream: 'Creme', white: 'Weiß', mint: 'Mint', sky: 'Himmelblau', lavender: 'Lavendel', peach: 'Pfirsich', gray: 'Grau' },
+      pattern: 'Hintergrundmuster',
+      patterns: { none: 'Keins', flowers: 'Blumen', leaves: 'Blätter', mountains: 'Berge', hands: 'Handabdrücke', feet: 'Fußabdrücke',
+                  paws: 'Pfoten', pencils: 'Bleistifte', glasses: 'Brillen', phones: 'Handys', planets: 'Planeten', rockets: 'Raketen',
+                  moon: 'Mond & Sterne', coffee: 'Kaffee', clouds: 'Wolken', plants: 'Topfpflanzen' },
+      font: 'Schriftart',
+      fonts: { system: 'System', nunito: 'Rund', poppins: 'Modern', lora: 'Elegant', comfortaa: 'Verspielt', atkinson: 'Gut lesbar' },
+      fontSample: 'Grüße aus München 123',
+      scene: 'Hintergrundbild',
+      scenes: { none: 'Keins', neon: 'Neon-Wirbel', autumn: 'Herbstlaub', roses: 'Aquarellrosen', moon: 'Katze im Mondschein',
+                stars: 'Sternenhimmel', snow: 'Schneeflocken', aurora: 'Polarlicht', sunset: 'Sonnenuntergang', sakura: 'Kirschblüte', custom: 'Eigenes Bild' },
+      sceneHint: 'Mit Hintergrundbild ist das Muster ausgeblendet. Wenn du ein Muster wählst, wird das Bild ausgeschaltet.',
+      uploadBg: '📷 Eigenes Bild hochladen', replaceBg: '📷 Anderes Bild wählen', removeBg: 'Eigenes Bild entfernen',
+      bgSaved: 'Hintergrundbild gesetzt.', bgRemoved: 'Eigenes Bild entfernt.',
+      bgError: 'Das Bild konnte nicht geladen werden. Versuche eine JPG- oder PNG-Datei.', bgTooLarge: 'Das Bild ist zu groß zum Speichern. Wähle ein kleineres.',
+      catListTitle: 'Deine Kategorien', builtIn: 'vorgegeben', customTag: 'eigene',
+      newCategory: 'Neue Kategorie', catNameLabel: 'Name', catNamePh: 'z. B. Haustiere', catIconLabel: 'Symbol', catColorLabel: 'Farbe',
+      catKwLabel: 'Stichwörter (durch Kommas getrennt, optional)', catKwPh: 'z. B. Hund, Tierarzt, Fressnapf',
+      addCategory: 'Kategorie hinzufügen', catAdded: 'Kategorie hinzugefügt.',
+      errCatName: 'Bitte gib der Kategorie einen Namen.', errCatExists: 'Eine Kategorie mit diesem Namen gibt es schon.',
+      confirmCatDeleteTitle: name => `Kategorie „${name}“ löschen?`,
+      confirmCatDeleteText: n => `${n === 1 ? '1 Eintrag wird' : n + ' Einträge werden'} nach „Sonstiges“ verschoben.`, catDeleted: 'Kategorie gelöscht.',
+      budgetIntro: 'Lege ein Monatsbudget fest. Bei 80 % bekommst du eine gelbe Warnung, beim Überschreiten eine rote Meldung.',
+      budgetCurrency: 'Währung', budgetTotal: 'Gesamtbudget pro Monat', budgetPerCat: 'Budget pro Kategorie (optional)',
+      budgetPh: 'kein Budget', budgetSaved: 'Budget gespeichert.',
+      budget: 'Monatsbudget', setBudget: 'Monatsbudget festlegen', limitShort: 'Budget',
+      budgetOk: rem => `Alles im Rahmen – noch ${rem} übrig.`,
+      budgetWarn: (pct, rem) => `Achtung: ${pct} des Budgets verbraucht, nur noch ${rem} übrig.`,
+      budgetOver: over => `Budget um ${over} überschritten!`,
+      alertTotalWarn: cur => `Achtung: 80 % deines ${cur}-Monatsbudgets sind erreicht.`,
+      alertTotalOver: (cur, over) => `Dein ${cur}-Monatsbudget ist um ${over} überschritten!`,
+      alertCatWarn: name => `Achtung: Das Budget für „${name}“ ist fast aufgebraucht.`,
+      alertCatOver: (name, over) => `Das Budget für „${name}“ ist um ${over} überschritten.`,
+      overBudget: 'über Budget',
+      cats: { food: 'Lebensmittel', dining: 'Restaurant & Café', housing: 'Wohnen & Nebenkosten', transport: 'Verkehr',
+              health: 'Gesundheit', fun: 'Unterhaltung', clothing: 'Kleidung', other: 'Sonstiges' }
+    },
+    fr: {
+      appTitle: 'Dépenses du mois', settings: 'Paramètres', language: 'Langue', currency: 'Devise',
+      defaultCurrency: 'Devise par défaut',
+      settingsNote: 'Changer de devise ne modifie pas les dépenses déjà enregistrées.',
+      close: 'Terminé', prevMonth: 'Mois précédent', nextMonth: 'Mois suivant', thisMonth: 'Aller au mois en cours',
+      totalSpent: 'Total des dépenses', noExpensesMonth: 'Aucune dépense ce mois-ci pour l’instant.',
+      byCategory: 'Par catégorie', chartCurrency: 'Devise du graphique',
+      perCurrencyHint: 'Les totaux sont affichés séparément par devise, sans conversion.',
+      newExpense: 'Nouvelle dépense', editExpense: 'Modifier la dépense',
+      amount: 'Montant', date: 'Date', note: 'Note', notePlaceholder: 'ex. courses chez Lidl', category: 'Catégorie',
+      catAuto: 'Détectée automatiquement – touchez-en une autre pour la changer.',
+      catLearned: 'Proposée d’après votre choix précédent.',
+      catManual: 'Choisie par vous.',
+      catNone: 'Aucune catégorie reconnue – choisissez-en une si vous le souhaitez.',
+      catSaved: 'Catégorie enregistrée.',
+      save: 'Enregistrer', saveChanges: 'Enregistrer les modifications', cancel: 'Annuler',
+      saved: 'Dépense enregistrée.', updated: 'Modifications enregistrées.', deleted: 'Dépense supprimée.',
+      errEmpty: 'Veuillez saisir un montant.',
+      errInvalid: 'Montant invalide. Saisissez un nombre positif, ex. 12500 ou 12,50.',
+      errDate: 'Veuillez saisir une date valide.',
+      expenses: 'Dépenses', filterMonth: 'Mois', allMonths: 'Tous les mois',
+      filterCategory: 'Catégorie', allCategories: 'Toutes les catégories',
+      search: 'Rechercher dans les notes', searchPlaceholder: 'Rechercher dans les notes…',
+      noResults: 'Aucune dépense ne correspond aux filtres.',
+      edit: 'Modifier', delete: 'Supprimer',
+      confirmDeleteTitle: 'Supprimer cette dépense ?', confirmDeleteText: 'Cette action est irréversible.',
+      confirmDelete: 'Oui, supprimer',
+      exportCsv: 'Exporter en CSV', exportEmpty: 'Aucune dépense à exporter pour l’instant.', exported: 'Fichier CSV téléchargé.',
+      items: n => (n <= 1 ? `${n} dépense` : `${n} dépenses`), addExpense: 'Ajouter une dépense', noNote: '(sans note)',
+      storageWarn: 'Votre navigateur bloque l’enregistrement – les données peuvent être perdues au rechargement.',
+      history: 'Totaux mensuels – 12 derniers mois', historyHint: 'Touchez un mois pour le détail. Les données plus anciennes ne sont jamais supprimées.',
+      closed: 'Clôturé', inProgress: 'En cours', closedMonth: 'Mois clôturé – total définitif', noSpending: 'Aucune dépense',
+      monthClosed: m => `${m} est clôturé. Total des dépenses :`, view: 'Voir', dismiss: 'Fermer la notification',
+      yearTotal: 'Total sur 12 mois', exportMonthly: 'Totaux mensuels en CSV',
+      backup: 'Sauvegarde', resetAll: 'Réinitialiser toutes les données',
+      resetHint: 'Supprime toutes les dépenses, les catégories personnalisées, les budgets et les catégories apprises. La langue, la devise et l’apparence sont conservées.',
+      resetTitle: 'Tout réinitialiser ?',
+      resetText: n => `${n <= 1 ? n + ' dépense sera supprimée' : n + ' dépenses seront supprimées'} définitivement. Cette action est irréversible. Pensez à exporter en CSV avant.`,
+      resetYes: 'Oui, tout supprimer', resetDone: 'Toutes les données ont été supprimées.',
+      tabGeneral: 'Général', tabLook: 'Apparence', tabCategories: 'Catégories', tabBudget: 'Budgets', tabData: 'Données',
+      themeMode: 'Mode', themes: { auto: 'Automatique', light: 'Clair', dark: 'Sombre' },
+      accentColor: 'Couleur d’accent',
+      accents: { blue: 'Bleu', green: 'Vert', teal: 'Turquoise', purple: 'Violet', pink: 'Rose', coral: 'Corail', graphite: 'Graphite' },
+      finish: 'Finition', finishes: { glossy: 'Brillante', matte: 'Mate' },
+      bgColor: 'Couleur de fond',
+      tints: { cream: 'Crème', white: 'Blanc', mint: 'Menthe', sky: 'Ciel', lavender: 'Lavande', peach: 'Pêche', gray: 'Gris' },
+      pattern: 'Motif de fond',
+      patterns: { none: 'Aucun', flowers: 'Fleurs', leaves: 'Feuilles', mountains: 'Montagnes', hands: 'Empreintes de mains', feet: 'Empreintes de pas',
+                  paws: 'Pattes', pencils: 'Crayons', glasses: 'Lunettes', phones: 'Téléphones', planets: 'Planètes', rockets: 'Fusées',
+                  moon: 'Lune et étoiles', coffee: 'Café', clouds: 'Nuages', plants: 'Plantes en pot' },
+      font: 'Police',
+      fonts: { system: 'Système', nunito: 'Arrondie', poppins: 'Moderne', lora: 'Élégante', comfortaa: 'Ludique', atkinson: 'Très lisible' },
+      fontSample: 'Café crème à l’été 123',
+      scene: 'Image de fond',
+      scenes: { none: 'Aucune', neon: 'Tourbillons néon', autumn: 'Feuilles d’automne', roses: 'Roses aquarelle', moon: 'Chat au clair de lune',
+                stars: 'Ciel étoilé', snow: 'Flocons de neige', aurora: 'Aurore boréale', sunset: 'Coucher de soleil', sakura: 'Fleurs de cerisier', custom: 'Votre image' },
+      sceneHint: 'Avec une image de fond, le motif est masqué. Choisir un motif désactive l’image.',
+      uploadBg: '📷 Importer votre image', replaceBg: '📷 Choisir une autre image', removeBg: 'Supprimer votre image',
+      bgSaved: 'Image de fond appliquée.', bgRemoved: 'Votre image a été supprimée.',
+      bgError: 'Impossible de charger l’image. Essayez un fichier JPG ou PNG.', bgTooLarge: 'L’image est trop lourde pour être enregistrée. Choisissez-en une plus petite.',
+      catListTitle: 'Vos catégories', builtIn: 'intégrée', customTag: 'personnalisée',
+      newCategory: 'Nouvelle catégorie', catNameLabel: 'Nom', catNamePh: 'ex. Animaux', catIconLabel: 'Icône', catColorLabel: 'Couleur',
+      catKwLabel: 'Mots-clés (séparés par des virgules, facultatif)', catKwPh: 'ex. chien, vétérinaire, animalerie',
+      addCategory: 'Ajouter la catégorie', catAdded: 'Catégorie ajoutée.',
+      errCatName: 'Donnez un nom à la catégorie.', errCatExists: 'Une catégorie porte déjà ce nom.',
+      confirmCatDeleteTitle: name => `Supprimer la catégorie « ${name} » ?`,
+      confirmCatDeleteText: n => `${n <= 1 ? n + ' dépense sera déplacée' : n + ' dépenses seront déplacées'} vers « Autre ».`, catDeleted: 'Catégorie supprimée.',
+      budgetIntro: 'Fixez un budget mensuel. À 80 % du budget, vous recevez un avertissement jaune, et une alerte rouge en cas de dépassement.',
+      budgetCurrency: 'Devise', budgetTotal: 'Budget mensuel total', budgetPerCat: 'Budget par catégorie (facultatif)',
+      budgetPh: 'aucun budget', budgetSaved: 'Budget enregistré.',
+      budget: 'Budget mensuel', setBudget: 'Définir un budget mensuel', limitShort: 'Budget',
+      budgetOk: rem => `Tout va bien – il reste ${rem}.`,
+      budgetWarn: (pct, rem) => `Attention : ${pct} du budget utilisé, il ne reste que ${rem}.`,
+      budgetOver: over => `Budget dépassé de ${over} !`,
+      alertTotalWarn: cur => `Attention : vous avez atteint 80 % de votre budget mensuel en ${cur}.`,
+      alertTotalOver: (cur, over) => `Votre budget mensuel en ${cur} est dépassé de ${over} !`,
+      alertCatWarn: name => `Attention : le budget « ${name} » est presque épuisé.`,
+      alertCatOver: (name, over) => `Le budget « ${name} » est dépassé de ${over}.`,
+      overBudget: 'budget dépassé',
+      cats: { food: 'Alimentation', dining: 'Restaurants et cafés', housing: 'Logement et charges', transport: 'Transports',
+              health: 'Santé', fun: 'Loisirs', clothing: 'Vêtements', other: 'Autre' }
+    }
+  };
+
+  // ---------- Kulcsszavak (mind a négy nyelven) ----------
+  const KEYWORDS = {
+    food: [
+      'bevásárlás', 'bevásárol', 'élelmiszer', 'Lidl', 'Aldi', 'Spar', 'Tesco', 'Penny', 'Auchan', 'CBA', 'Coop', 'Príma',
+      'pék', 'pékség', 'kenyér', 'zöldség', 'gyümölcs', 'tej', 'piac', 'hentes', 'közért',
+      'grocery', 'groceries', 'supermarket', 'bakery', 'bread', 'Sainsbury', 'Asda', 'Waitrose', 'Morrisons', 'Walmart', 'Kroger',
+      'Lebensmittel', 'Einkauf', 'einkaufen', 'Supermarkt', 'Bäcker', 'Bäckerei', 'Brot', 'Rewe', 'Edeka', 'Netto', 'Kaufland', 'Migros', 'Denner', 'Hofer', 'Billa',
+      'courses', 'épicerie', 'supermarché', 'boulangerie', 'Carrefour', 'Leclerc', 'Intermarché', 'Monoprix', 'Franprix', 'marché'
+    ],
+    dining: [
+      'étterem', 'éttermi', 'kávé', 'kávézó', 'ebéd', 'vacsora', 'reggeli', 'pizza', 'Wolt', 'Foodora', 'burger', 'gyros', 'cukrászda', 'büfé', 'menü',
+      'restaurant', 'cafe', 'coffee', 'lunch', 'dinner', 'breakfast', 'takeaway', 'takeout', 'Starbucks', 'McDonald', 'KFC', 'Deliveroo', 'Uber Eats', 'ubereats', 'Just Eat', 'Bolt Food',
+      'Mittagessen', 'Abendessen', 'Frühstück', 'Kaffee', 'Gaststätte', 'Imbiss', 'Lieferando', 'Pizzeria',
+      'déjeuner', 'dîner', 'petit-déjeuner', 'brasserie', 'bistrot', 'resto'
+    ],
+    housing: [
+      'lakbér', 'albérlet', 'bérleti díj', 'rezsi', 'villany', 'villanyszámla', 'áram', 'gáz', 'víz', 'internet', 'közös költség', 'lakás', 'fűtés', 'telefonszámla', 'Telekom', 'Yettel', 'Vodafone', 'Digi', 'MVM', 'Főgáz', 'Díjnet',
+      'rent', 'electricity', 'utilities', 'utility', 'water bill', 'gas bill', 'power bill', 'broadband', 'wifi', 'mortgage', 'council tax', 'heating',
+      'Miete', 'Strom', 'Gas', 'Wasser', 'Nebenkosten', 'Heizung', 'Wohnung',
+      'loyer', 'électricité', 'eau', 'charges', 'chauffage', 'EDF', 'Engie', 'logement'
+    ],
+    transport: [
+      'benzin', 'tankolás', 'tankol', 'üzemanyag', 'gázolaj', 'BKK', 'BKV', 'MÁV', 'Volán', 'bérlet', 'parkolás', 'parkol', 'vonat', 'busz', 'villamos', 'metró', 'taxi', 'autópálya', 'matrica', 'repülő', 'Mol', 'OMV', 'Shell',
+      'petrol', 'fuel', 'gas station', 'parking', 'train', 'bus', 'tram', 'metro', 'subway', 'tube', 'Oyster', 'flight', 'toll', 'Uber',
+      'Tankstelle', 'Benzin', 'Diesel', 'Parken', 'Parkhaus', 'Zug', 'Bahn', 'Deutsche Bahn', 'SBB', 'ÖBB', 'Fahrkarte', 'U-Bahn', 'S-Bahn', 'Straßenbahn',
+      'essence', 'carburant', 'stationnement', 'SNCF', 'RATP', 'Navigo', 'péage', 'TGV'
+    ],
+    health: [
+      'gyógyszer', 'gyógyszertár', 'patika', 'orvos', 'orvosi', 'fogászat', 'fogorvos', 'kórház', 'vitamin', 'rendelő', 'szemüveg',
+      'pharmacy', 'medicine', 'doctor', 'dentist', 'hospital', 'chemist', 'prescription', 'clinic',
+      'Apotheke', 'Arzt', 'Zahnarzt', 'Medikament', 'Krankenhaus', 'Klinik',
+      'pharmacie', 'médicament', 'médecin', 'docteur', 'dentiste', 'hôpital', 'ordonnance'
+    ],
+    fun: [
+      'mozi', 'koncert', 'Netflix', 'játék', 'színház', 'fesztivál', 'HBO', 'Spotify', 'Disney', 'Steam', 'PlayStation', 'Xbox', 'Nintendo', 'múzeum', 'kiállítás', 'strand', 'könyv',
+      'cinema', 'movie', 'concert', 'game', 'games', 'theatre', 'theater', 'festival', 'museum', 'book',
+      'Kino', 'Konzert', 'Spiel', 'Theater', 'Buch',
+      'cinéma', 'jeu', 'jeux', 'théâtre', 'spectacle', 'musée', 'livre', 'film'
+    ],
+    clothing: [
+      'ruha', 'ruhanemű', 'cipő', 'kabát', 'nadrág', 'póló', 'ing', 'zokni', 'pulóver', 'szoknya', 'H&M', 'Zara', 'Reserved', 'Deichmann', 'CCC', 'Decathlon',
+      'clothes', 'clothing', 'shoes', 'shoe', 'jacket', 'coat', 'shirt', 'trousers', 'jeans', 'dress', 'Primark',
+      'Kleidung', 'Schuhe', 'Jacke', 'Mantel', 'Hose', 'Hemd', 'Kleid',
+      'vêtements', 'vêtement', 'chaussures', 'veste', 'manteau', 'pantalon', 'chemise', 'robe', 'jupe'
+    ],
+    other: []
+  };
+
+  // Rövid kulcsszavaknál (<= 4 betű) csak ezek a toldalékok/ragok engedélyezettek,
+  // hogy pl. a „bus” ne illeszkedjen a „business”-re, de a „lidlben” igen.
+  const SHORT_SUFFIXES = new Set([
+    '', 's', 'es', 'e', 'er', 'en', 'n', 'x', 't', 'et', 'ot', 'at', 'ert', 're', 'ra', 'ba', 'be', 'ban', 'ben',
+    'nal', 'nel', 'val', 'vel', 'hoz', 'hez', 'bol', 'tol', 'rol', 'on', 'ja', 'je', 'nak', 'nek',
+    'dij', 'dijat', 'szamla', 'szamlat', 'szamlara', 'jegy', 'jegyet', 'berlet', 'karte', 'rechnung', 'kosten',
+    'ticket', 'tickets', 'bill', 'besuch', 'ei'
+  ]);
+  const STOPWORDS = new Set([
+    'a', 'az', 'es', 'egy', 'meg', 'is', 'nak', 'nek', 'the', 'and', 'for', 'with', 'at', 'of', 'to', 'in', 'on',
+    'der', 'die', 'das', 'und', 'fur', 'mit', 'bei', 'im', 'am', 'zum', 'zur', 'ein', 'eine',
+    'le', 'la', 'les', 'de', 'du', 'des', 'et', 'pour', 'avec', 'chez', 'au', 'aux', 'un', 'une', 'en'
+  ]);
+
+  function normalize(s) {
+    return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+      .replace(/ß/g, 'ss').replace(/œ/g, 'oe').replace(/æ/g, 'ae')
+      .replace(/[^a-z0-9]+/g, ' ').trim();
+  }
+  function tokenize(s) { const n = normalize(s); return n ? n.split(' ') : []; }
+
+  let KW_INDEX = [];
+  function buildKwIndex() {
+    KW_INDEX = [];
+    const add = (cat, kw, bonus) => {
+      const n = normalize(kw);
+      if (n) KW_INDEX.push({ cat, kw: n, phrase: n.includes(' '), bonus });
+    };
+    BUILTIN.forEach(cat => KEYWORDS[cat].forEach(kw => add(cat, kw, 0)));
+    // A saját kategória neve és kulcsszavai kis előnyt kapnak a beépítettekkel szemben
+    state.customCats.forEach(c => [c.name, ...c.keywords].forEach(kw => add(c.id, kw, 2)));
+  }
+
+  function tokenMatches(tok, kw) {
+    if (tok === kw) return true;
+    if (!tok.startsWith(kw)) return false;
+    if (kw.length >= 5) return true;
+    return SHORT_SUFFIXES.has(tok.slice(kw.length));
+  }
+
+  function keywordCategory(note) {
+    const toks = tokenize(note);
+    if (!toks.length) return null;
+    const padded = ' ' + toks.join(' ') + ' ';
+    let best = null, bestScore = 0;
+    for (const k of KW_INDEX) {
+      let hit = false;
+      if (k.phrase) hit = padded.includes(' ' + k.kw + ' ') || padded.includes(' ' + k.kw);
+      else hit = toks.some(t => tokenMatches(t, k.kw));
+      if (hit) {
+        const score = k.kw.length + (k.phrase ? 10 : 0) + k.bonus;
+        if (score > bestScore) { bestScore = score; best = k.cat; }
+      }
+    }
+    return best;
+  }
+
+  function significantTokens(note) {
+    return [...new Set(tokenize(note).filter(t => t.length >= 3 && !STOPWORDS.has(t) && !/^\d+$/.test(t)))];
+  }
+  function tokSimilar(a, b) {
+    if (a === b) return true;
+    return Math.min(a.length, b.length) >= 4 && (a.startsWith(b) || b.startsWith(a));
+  }
+  function learnedCategory(note) {
+    const toks = significantTokens(note);
+    if (!toks.length) return null;
+    let best = null;
+    for (const e of state.learned) {
+      if (!e.t.length) continue;
+      const all = e.t.every(lt => toks.some(nt => tokSimilar(lt, nt)));
+      if (!all) continue;
+      if (!best || e.t.length > best.t.length || (e.t.length === best.t.length && e.ts > best.ts)) best = e;
+    }
+    return best ? best.c : null;
+  }
+  function suggest(note) {
+    const l = learnedCategory(note);
+    if (l) return { cat: l, source: 'learned' };
+    const k = keywordCategory(note);
+    if (k) return { cat: k, source: 'keyword' };
+    return { cat: 'other', source: 'none' };
+  }
+  function learn(note, cat) {
+    const t = significantTokens(note);
+    if (!t.length) return;
+    const key = t.slice().sort().join(' ');
+    state.learned = state.learned.filter(e => e.t.slice().sort().join(' ') !== key);
+    state.learned.push({ t, c: cat, ts: Date.now() });
+    if (state.learned.length > 500) state.learned.splice(0, state.learned.length - 500);
+    persist('learned');
+  }
+
+  // ---------- Tárolás ----------
+  const KEYS = {
+    settings: 'hk.settings.v1', expenses: 'hk.expenses.v1', learned: 'hk.learned.v1', lastSeenMonth: 'hk.lastSeenMonth.v1',
+    customCats: 'hk.customCats.v1', budgets: 'hk.budgets.v1'
+  };
+  let storageOk = true;
+  function load(key, fallback) {
+    try {
+      const raw = localStorage.getItem(KEYS[key]);
+      return raw ? JSON.parse(raw) : fallback;
+    } catch (e) { storageOk = false; return fallback; }
+  }
+  function persist(key) {
+    try { localStorage.setItem(KEYS[key], JSON.stringify(state[key])); }
+    catch (e) { storageOk = false; $('storageWarn').hidden = false; }
+  }
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+  function todayStr() { const d = new Date(); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; }
+  function monthOf(dateStr) { return dateStr.slice(0, 7); }
+  function shiftMonth(m, delta) {
+    let [y, mo] = m.split('-').map(Number);
+    mo += delta;
+    while (mo < 1) { mo += 12; y--; }
+    while (mo > 12) { mo -= 12; y++; }
+    return `${y}-${pad(mo)}`;
+  }
+
+  const savedSettings = load('settings', {}) || {};
+  const settings = Object.assign({}, DEFAULT_SETTINGS);
+  if (LANGS[savedSettings.lang]) settings.lang = savedSettings.lang;
+  if (CURRENCIES.includes(savedSettings.currency)) settings.currency = savedSettings.currency;
+  if (THEMES.includes(savedSettings.theme)) settings.theme = savedSettings.theme;
+  if (ACCENTS[savedSettings.accent]) settings.accent = savedSettings.accent;
+  if (FINISHES.includes(savedSettings.finish)) settings.finish = savedSettings.finish;
+  if (TINTS[savedSettings.bgTint]) settings.bgTint = savedSettings.bgTint;
+  if (PATTERNS.includes(savedSettings.pattern)) settings.pattern = savedSettings.pattern;
+  if (FONTS[savedSettings.font]) settings.font = savedSettings.font;
+  let customBg = null;
+  try { customBg = localStorage.getItem('hk.customBg.v1'); } catch (e) { /* nincs tárolás */ }
+  if (SCENES.includes(savedSettings.scene) || (savedSettings.scene === 'custom' && customBg)) settings.scene = savedSettings.scene;
+
+  const state = {
+    settings,
+    customCats: (load('customCats', []) || []).filter(c => c && c.id && c.name)
+      .map(c => ({ id: c.id, name: String(c.name), icon: c.icon || '⭐', color: c.color || CUSTOM_COLORS[0], keywords: Array.isArray(c.keywords) ? c.keywords : [] })),
+    expenses: [],
+    learned: [],
+    budgets: load('budgets', {}) || {},
+    customBg,
+    viewMonth: monthOf(todayStr()),
+    listAll: false,
+    filterCat: 'all',
+    search: '',
+    chartCurrency: null,
+    settingsTab: 'general',
+    budgetCur: settings.currency,
+    newCat: { icon: CUSTOM_ICONS[0], color: CUSTOM_COLORS[0] },
+    form: { editingId: null, cat: 'other', manual: false, source: 'none' },
+    pendingDelete: null,
+    confirmAction: null
+  };
+  state.expenses = (load('expenses', []) || [])
+    .filter(e => e && e.id && e.date && CURRENCIES.includes(e.currency))
+    .map(e => (isCat(e.category) ? e : Object.assign(e, { category: 'other' })));
+  state.learned = (load('learned', []) || []).filter(e => e && Array.isArray(e.t) && isCat(e.c));
+
+  // ---------- Kategóriák ----------
+  function allCats() { return [...BUILTIN.slice(0, -1), ...state.customCats.map(c => c.id), 'other']; }
+  function customCat(id) { return state.customCats.find(c => c.id === id); }
+  function isCat(id) { return BUILTIN.includes(id) || !!customCat(id); }
+  function catColor(id) { const c = customCat(id); return c ? c.color : (BUILTIN_COLORS[id] || BUILTIN_COLORS.other); }
+  function catIcon(id) { const c = customCat(id); return c ? c.icon : (BUILTIN_ICONS[id] || BUILTIN_ICONS.other); }
+
+  // ---------- Formázás ----------
+  const $ = id => document.getElementById(id);
+  const t = key => I18N[state.settings.lang][key];
+  const catName = c => { const cc = customCat(c); return cc ? cc.name : (I18N[state.settings.lang].cats[c] || I18N[state.settings.lang].cats.other); };
+  const locale = () => LOCALES[state.settings.lang];
+  function digits(cur) { return cur === 'HUF' ? 0 : 2; }
+  function fmtMoney(amount, cur) {
+    const d = digits(cur);
+    return new Intl.NumberFormat(locale(), { style: 'currency', currency: cur, currencyDisplay: 'narrowSymbol', minimumFractionDigits: d, maximumFractionDigits: d }).format(amount);
+  }
+  function fmtPlain(n) { return new Intl.NumberFormat(locale(), { useGrouping: false, minimumFractionDigits: 0, maximumFractionDigits: 2 }).format(n); }
+  function fmtPct(x) { return new Intl.NumberFormat(locale(), { style: 'percent', maximumFractionDigits: 0 }).format(x); }
+  function parseDate(s) { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); }
+  function fmtDate(s) { return new Intl.DateTimeFormat(locale(), { year: 'numeric', month: 'short', day: 'numeric' }).format(parseDate(s)); }
+  function fmtMonth(m) { const [y, mo] = m.split('-').map(Number); return new Intl.DateTimeFormat(locale(), { year: 'numeric', month: 'long' }).format(new Date(y, mo - 1, 1)); }
+  function esc(s) { return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+
+  // Összeg értelmezése: „12500”, „12 500”, „12.500”, „12,50”, „1.234,56”, „1,234.56”
+  function parseAmount(raw) {
+    let s = String(raw || '').replace(/[\s  ']/g, '');
+    if (!s) return { error: 'errEmpty' };
+    if (!/^[0-9.,]+$/.test(s)) return { error: 'errInvalid' };
+    const lastDot = s.lastIndexOf('.'), lastComma = s.lastIndexOf(',');
+    if (lastDot >= 0 && lastComma >= 0) {
+      const dec = lastDot > lastComma ? '.' : ',';
+      const thou = dec === '.' ? ',' : '.';
+      s = s.split(thou).join('').replace(dec, '.');
+    } else if (lastDot >= 0 || lastComma >= 0) {
+      const sep = lastDot >= 0 ? '.' : ',';
+      const parts = s.split(sep);
+      if (parts.length > 2 || parts[parts.length - 1].length === 3) s = parts.join('');
+      else s = parts.join('.');
+    }
+    if (!/^\d+(\.\d{1,2})?$/.test(s)) return { error: 'errInvalid' };
+    const v = Number(s);
+    if (!isFinite(v) || v <= 0 || v > 1e10) return { error: 'errInvalid' };
+    return { value: v };
+  }
+
+  // ---------- Megjelenés: mód, színek, minta, betűtípus ----------
+  const darkMq = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : { matches: false };
+  function hexToRgb(h) { const n = parseInt(h.slice(1), 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; }
+  function rgbToHex(c) { return '#' + c.map(v => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, '0')).join(''); }
+  function mix(a, b, w) { const pa = hexToRgb(a), pb = hexToRgb(b); return rgbToHex(pa.map((v, i) => v * (1 - w) + pb[i] * w)); }
+  function luminance(h) {
+    return hexToRgb(h).map(v => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); })
+      .reduce((s, v, i) => s + v * [0.2126, 0.7152, 0.0722][i], 0);
+  }
+  function contrast(a, b) { const la = luminance(a), lb = luminance(b); return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05); }
+  function isDark() { return state.settings.theme === 'dark' || (state.settings.theme === 'auto' && darkMq.matches); }
+  function accentFor(key, dark, finish) {
+    let a = ACCENTS[key];
+    if (dark) a = mix(a, '#ffffff', key === 'graphite' ? 0.45 : 0.3);
+    if (finish === 'matte') a = mix(a, '#8a8f98', 0.28);
+    return a;
+  }
+
+  // ---------- Háttérképek (kódból rajzolt, saját illusztrációk) ----------
+  // Determinisztikus véletlen, hogy a kép átméretezéskor ne „ugráljon”
+  function rng(seed) {
+    return function () {
+      seed = (seed + 0x6D2B79F5) | 0;
+      let x = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      x = (x + Math.imul(x ^ (x >>> 7), 61 | x)) ^ x;
+      return ((x ^ (x >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  const r1 = n => Math.round(n * 10) / 10;
+  function sparkle(x, y, r, color, op) {
+    const q = r * 0.18;
+    return `<path d="M${r1(x)} ${r1(y - r)} Q${r1(x + q)} ${r1(y - q)} ${r1(x + r)} ${r1(y)} Q${r1(x + q)} ${r1(y + q)} ${r1(x)} ${r1(y + r)} Q${r1(x - q)} ${r1(y + q)} ${r1(x - r)} ${r1(y)} Q${r1(x - q)} ${r1(y - q)} ${r1(x)} ${r1(y - r)} Z" fill="${color}" opacity="${r1(op * 10) / 10}"/>`;
+  }
+  function starDots(R, n, W, H, maxY, color) {
+    let s = '';
+    for (let i = 0; i < n; i++) s += `<circle cx="${r1(R() * W)}" cy="${r1(R() * H * maxY)}" r="${r1(0.4 + R() * 1.3)}" fill="${color}" opacity="${r1((0.25 + R() * 0.7) * 10) / 10}"/>`;
+    return s;
+  }
+  function leafPath(L, w) {
+    return `M0 ${r1(-L)} C${r1(w)} ${r1(-L * 0.5)} ${r1(w)} ${r1(L * 0.5)} 0 ${r1(L)} C${r1(-w)} ${r1(L * 0.5)} ${r1(-w)} ${r1(-L * 0.5)} 0 ${r1(-L)} Z`;
+  }
+  function bez(p0, p1, p2, p3, t) {
+    const u = 1 - t;
+    return [0, 1].map(i => u * u * u * p0[i] + 3 * u * u * t * p1[i] + 3 * u * t * t * p2[i] + t * t * t * p3[i]);
+  }
+
+  const SCENE_DRAW = {
+    neon(W, H) {
+      const R = rng(7), m = Math.min(W, H);
+      let s = `<defs>
+        <linearGradient id="n1" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#2563eb"/><stop offset=".55" stop-color="#9333ea"/><stop offset="1" stop-color="#f472b6"/></linearGradient>
+        <linearGradient id="n2" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#7c3aed"/><stop offset=".6" stop-color="#c026d3"/><stop offset="1" stop-color="#fb923c"/></linearGradient>
+        <linearGradient id="n3" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#6366f1"/></linearGradient>
+        <radialGradient id="pool"><stop offset="0" stop-color="#1e1b4b"/><stop offset="1" stop-color="#05030c"/></radialGradient>
+        <filter id="glow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="${r1(m * 0.006)}" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      </defs><rect width="${W}" height="${H}" fill="#06040d"/>`;
+      s += `<ellipse cx="${W / 2}" cy="${r1(H * 0.93)}" rx="${r1(W * 0.8)}" ry="${r1(H * 0.13)}" fill="url(#pool)"/>`;
+      s += `<g filter="url(#glow)" fill="none" stroke-linecap="round">`;
+      for (let i = 0; i < 18; i++) {
+        const x0 = W * (0.5 + (R() - 0.5) * 0.5), y0 = H * 0.86;
+        const x1 = W * (0.08 + R() * 0.84), y1 = H * (0.08 + R() * 0.55);
+        const left = x1 < W / 2, r = m * (0.04 + R() * 0.08), dir = left ? 1 : -1;
+        const d = `M${r1(x0)} ${r1(y0)} C${r1(x0 + (R() - 0.5) * W * 0.6)} ${r1(y0 - H * 0.28)} ${r1(x1 + (R() - 0.5) * W * 0.5)} ${r1(y1 + H * 0.22)} ${r1(x1)} ${r1(y1)}` +
+          ` A${r1(r)} ${r1(r)} 0 1 ${left ? 1 : 0} ${r1(x1 + dir * r * 1.3)} ${r1(y1 + r * 0.3)} A${r1(r * 0.45)} ${r1(r * 0.45)} 0 1 ${left ? 1 : 0} ${r1(x1 + dir * r * 0.7)} ${r1(y1 - r * 0.1)}`;
+        s += `<path d="${d}" stroke="url(#n${1 + Math.floor(R() * 3)})" stroke-width="${r1(m * (0.004 + R() * 0.02))}" opacity="${r1((0.45 + R() * 0.5) * 10) / 10}"/>`;
+      }
+      for (let i = 0; i < 40; i++) {
+        const x = W * (0.04 + R() * 0.92), y = H * (0.06 + R() * 0.66), r = m * (0.01 + R() * 0.025);
+        s += `<path d="M${r1(x)} ${r1(y)} a${r1(r)} ${r1(r)} 0 1 ${R() < 0.5 ? 1 : 0} ${r1(r)} ${r1(-r)}" stroke="url(#n${1 + Math.floor(R() * 3)})" stroke-width="${r1(1.5 + R() * 3)}" opacity=".7"/>`;
+      }
+      for (let j = 1; j <= 6; j++) {
+        s += `<ellipse cx="${W / 2}" cy="${r1(H * 0.92)}" rx="${r1(W * 0.11 * j)}" ry="${r1(H * 0.016 * j)}" stroke="url(#n${j % 2 ? 3 : 1})" stroke-width="${r1(m * 0.004)}" opacity="${r1((0.7 - j * 0.08) * 10) / 10}"/>`;
+      }
+      s += `</g><path d="M0 ${r1(H * 0.86)} Q${r1(W * 0.1)} ${r1(H * 0.77)} ${r1(W * 0.22)} ${r1(H * 0.86)} Q${r1(W * 0.12)} ${r1(H * 0.9)} 0 ${r1(H * 0.92)} Z" fill="#140d28"/>` +
+        `<path d="M${W} ${r1(H * 0.85)} Q${r1(W * 0.9)} ${r1(H * 0.76)} ${r1(W * 0.77)} ${r1(H * 0.86)} Q${r1(W * 0.88)} ${r1(H * 0.9)} ${W} ${r1(H * 0.92)} Z" fill="#140d28"/>`;
+      return s;
+    },
+
+    autumn() {
+      const R = rng(11), T = 260;
+      const cols = ['#f6c90e', '#f28c28', '#e85d2a', '#c0392b', '#7a9a3a', '#d98e04', '#a0522d', '#9bb06b'];
+      let tile = '';
+      for (let gy = 0; gy < 3; gy++) for (let gx = 0; gx < 3; gx++) {
+        const x = 45 + gx * 85 + (R() - 0.5) * 24, y = 45 + gy * 85 + (R() - 0.5) * 24;
+        const rot = Math.round(R() * 360), col = cols[Math.floor(R() * cols.length)], kind = Math.floor(R() * 3);
+        let body;
+        if (kind === 0) {
+          const L = 22 + R() * 8;
+          body = `<path d="${leafPath(L, L * 0.55)}" fill="${col}"/><path d="M0 ${r1(L)} V${r1(-L * 0.8)} M0 ${r1(L * 0.2)} L${r1(-L * 0.35)} ${r1(-L * 0.1)} M0 ${r1(-L * 0.15)} L${r1(L * 0.35)} ${r1(-L * 0.45)}" stroke="#fff" stroke-opacity=".45" stroke-width="1.3" fill="none"/>`;
+        } else if (kind === 1) {
+          const pts = [];
+          for (let k = 0; k < 10; k++) { const a = -Math.PI / 2 + k * Math.PI / 5, rr = k % 2 ? 11 : 26; pts.push(`${r1(Math.cos(a) * rr)} ${r1(Math.sin(a) * rr)}`); }
+          body = `<path d="M${pts.join(' L')} Z" fill="${col}" stroke="${col}" stroke-width="6" stroke-linejoin="round"/><path d="M0 26 V-20" stroke="#fff" stroke-opacity=".4" stroke-width="1.2"/>`;
+        } else {
+          body = `<path d="M0 30 V-30" stroke="${col}" stroke-width="2"/>` + [-20, -8, 4, 16].map((yy, k) =>
+            `<path d="${leafPath(8, 4.5)}" fill="${col}" transform="translate(${k % 2 ? 6 : -6} ${yy}) rotate(${k % 2 ? 50 : -50})"/>`).join('');
+        }
+        tile += `<g transform="translate(${r1(x)} ${r1(y)}) rotate(${rot})">${body}</g>`;
+      }
+      return `<defs><pattern id="lv" width="${T}" height="${T}" patternUnits="userSpaceOnUse">${tile}</pattern></defs>` +
+        `<rect width="100%" height="100%" fill="#0f3b4c"/><rect width="100%" height="100%" fill="url(#lv)"/>`;
+    },
+
+    roses(W, H) {
+      const R = rng(5), m = Math.min(W, H);
+      let s = `<defs>
+        <filter id="wc" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="4"/><feDisplacementMap in="SourceGraphic" scale="${r1(m * 0.014)}"/><feGaussianBlur stdDeviation="${r1(m * 0.0012)}"/></filter>
+        <filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="${r1(m * 0.012)}"/></filter>
+      </defs><rect width="${W}" height="${H}" fill="#f6efe3"/>`;
+      s += `<g filter="url(#soft)" opacity=".5">
+        <rect x="0" y="0" width="${r1(W * 0.1)}" height="${r1(H * 0.55)}" fill="#e6bf9c"/>
+        <rect x="${r1(W * 0.06)}" y="${r1(H * 0.05)}" width="${r1(W * 0.04)}" height="${r1(H * 0.3)}" fill="#c9c4be"/>
+        <rect x="${r1(W * 0.35)}" y="${r1(H * 0.04)}" width="${r1(W * 0.5)}" height="${r1(m * 0.035)}" rx="${r1(m * 0.02)}" fill="#e9b996"/>
+        <rect x="${r1(W * 0.93)}" y="${r1(H * 0.2)}" width="${r1(W * 0.05)}" height="${r1(H * 0.5)}" fill="#e6bf9c"/>
+        <rect x="${r1(W * 0.45)}" y="${r1(H * 0.92)}" width="${r1(W * 0.3)}" height="${r1(m * 0.03)}" fill="#e9b996"/>
+        <circle cx="${r1(W * 0.75)}" cy="${r1(H * 0.06)}" r="${r1(m * 0.05)}" fill="#c9c4be"/>
+        <circle cx="${r1(W * 0.62)}" cy="${r1(H * 0.93)}" r="${r1(m * 0.04)}" fill="#c9c4be"/>
+      </g>`;
+      const leaf = (x, y, L, rot, col) => `<path d="${leafPath(L, L * 0.38)}" fill="${col}" transform="translate(${r1(x)} ${r1(y)}) rotate(${Math.round(rot)})" opacity=".85"/>`;
+      const sprig = (x, y, L, rot) => {
+        let g = `<g transform="translate(${r1(x)} ${r1(y)}) rotate(${Math.round(rot)})"><path d="M0 0 V${r1(-L)}" stroke="#9a6a4c" stroke-width="${r1(m * 0.003)}"/>`;
+        for (let k = 1; k <= 5; k++) g += `<path d="${leafPath(L * 0.1, L * 0.035)}" fill="#b97a55" transform="translate(0 ${r1(-L * k / 6)}) rotate(${k % 2 ? 40 : -40}) translate(0 ${r1(-L * 0.08)})"/>`;
+        return g + '</g>';
+      };
+      const rose = (cx, cy, r) => {
+        let g = '';
+        for (let k = 0; k < 7; k++) { const a = k * 360 / 7; g += `<ellipse cx="${r1(r * 0.48)}" cy="0" rx="${r1(r * 0.52)}" ry="${r1(r * 0.4)}" transform="rotate(${r1(a)})" fill="#f3c6ab" stroke="#d9906c" stroke-width="${r1(r * 0.025)}"/>`; }
+        for (let k = 0; k < 6; k++) { const a = 25 + k * 60; g += `<ellipse cx="${r1(r * 0.26)}" cy="0" rx="${r1(r * 0.36)}" ry="${r1(r * 0.28)}" transform="rotate(${a})" fill="#eba98a" stroke="#c97a57" stroke-width="${r1(r * 0.022)}"/>`; }
+        for (let k = 0; k < 4; k++) { const a = 10 + k * 90; g += `<ellipse cx="${r1(r * 0.11)}" cy="0" rx="${r1(r * 0.2)}" ry="${r1(r * 0.16)}" transform="rotate(${a})" fill="#dc8f6c" stroke="#b5623f" stroke-width="${r1(r * 0.02)}"/>`; }
+        g += [0.13, 0.08, 0.035].map(q => `<circle r="${r1(r * q)}" fill="none" stroke="#a9563a" stroke-width="${r1(r * 0.02)}"/>`).join('');
+        return `<g transform="translate(${r1(cx)} ${r1(cy)}) rotate(${Math.round(R() * 90)})">${g}</g>`;
+      };
+      const cluster = (list, spread) => {
+        let leaves = '', roses = '', dots = '';
+        list.forEach(([x, y, r]) => {
+          for (let k = 0; k < 4; k++) leaves += leaf(x + (R() - 0.5) * r * 2.4, y + (R() - 0.5) * r * 2.4, r * (0.45 + R() * 0.3), R() * 360, ['#a06a4a', '#6b6460', '#c89270'][k % 3]);
+          leaves += sprig(x + (R() - 0.5) * r, y - r * 0.4, r * (1.6 + R()), (R() - 0.5) * 120);
+          roses += rose(x, y, r);
+        });
+        for (let k = 0; k < 26; k++) dots += `<circle cx="${r1(spread[0] + R() * spread[2])}" cy="${r1(spread[1] + R() * spread[3])}" r="${r1(0.8 + R() * 2.4)}" fill="#c98b62" opacity=".6"/>`;
+        return `<g filter="url(#wc)">${leaves}${roses}</g>${dots}`;
+      };
+      const rr = m * 0.17;
+      s += cluster([[W * 0.12, H * 0.64, rr], [W * 0.1, H * 0.84, rr * 0.95], [W * 0.38, H * 0.9, rr * 0.9]], [0, H * 0.5, W * 0.5, H * 0.5]);
+      s += cluster([[W * 0.88, H * 0.12, rr * 0.95]], [W * 0.6, 0, W * 0.4, H * 0.3]);
+      return s;
+    },
+
+    moon(W, H) {
+      const R = rng(3), m = Math.min(W, H);
+      const mx = W / 2, my = H * 0.6, mr = m * 0.3;
+      let s = `<defs>
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000"/><stop offset=".55" stop-color="#15181c"/><stop offset="1" stop-color="#4a5058"/></linearGradient>
+        <radialGradient id="mglow"><stop offset=".55" stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+        <radialGradient id="mface" cx=".45" cy=".4"><stop offset="0" stop-color="#f5f5f5"/><stop offset="1" stop-color="#cbcbcb"/></radialGradient>
+      </defs><rect width="${W}" height="${H}" fill="url(#sky)"/>${starDots(R, 140, W, H, 0.62, '#fff')}`;
+      s += `<circle cx="${mx}" cy="${r1(my)}" r="${r1(mr * 1.5)}" fill="url(#mglow)"/><circle cx="${mx}" cy="${r1(my)}" r="${r1(mr)}" fill="url(#mface)"/>`;
+      for (let k = 0; k < 6; k++) s += `<circle cx="${r1(mx + (R() - 0.5) * mr * 1.2)}" cy="${r1(my + (R() - 0.5) * mr * 1.2)}" r="${r1(mr * (0.05 + R() * 0.1))}" fill="#b9b9b9" opacity=".35"/>`;
+      const hy = H * 0.7;
+      s += `<path d="M0 ${r1(hy + H * 0.02)} Q${r1(W * 0.25)} ${r1(hy - H * 0.035)} ${r1(W / 2)} ${r1(hy - H * 0.02)} T${W} ${r1(hy)} V${H} H0 Z" fill="#0e2a0e"/>` +
+        `<path d="M0 ${r1(H * 0.8)} Q${r1(W * 0.45)} ${r1(H * 0.74)} ${W} ${r1(H * 0.79)} V${H} H0 Z" fill="#081d08"/>` +
+        `<path d="M0 ${r1(H * 0.9)} Q${r1(W * 0.6)} ${r1(H * 0.84)} ${W} ${r1(H * 0.9)} V${H} H0 Z" fill="#041104"/>`;
+      const k = mr * 0.85 / 100;
+      s += `<g transform="translate(${mx} ${r1(hy - H * 0.018)}) scale(${r1(k * 1000) / 1000})">
+        <path d="M14 -4 C36 -6 38 -32 27 -46 C21 -54 29 -63 36 -56" stroke="#050505" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M-16 0 C-23 -10 -20 -40 -8 -52 L8 -52 C20 -40 23 -10 16 0 Z" fill="#050505"/>
+        <ellipse cx="-7" cy="-1" rx="6" ry="3" fill="#050505"/><ellipse cx="7" cy="-1" rx="6" ry="3" fill="#050505"/>
+        <ellipse cx="0" cy="-62" rx="15" ry="13" fill="#050505"/>
+        <path d="M-14 -67 L-12 -87 L-3 -73 Z M14 -67 L12 -87 L3 -73 Z" fill="#050505"/>
+        <path d="M-12 -71 L-11.3 -81 L-6.5 -73 Z M12 -71 L11.3 -81 L6.5 -73 Z" fill="#4a4a4a"/>
+        <ellipse cx="-6" cy="-63" rx="4.4" ry="5" fill="#fff"/><ellipse cx="6" cy="-63" rx="4.4" ry="5" fill="#fff"/>
+        <ellipse cx="-5.4" cy="-63" rx="1.6" ry="3.3" fill="#050505"/><ellipse cx="5.4" cy="-63" rx="1.6" ry="3.3" fill="#050505"/>
+        <path d="M-8 -57 L-24 -60 M-8 -56 L-24 -55 M8 -57 L24 -60 M8 -56 L24 -55" stroke="#cfcfcf" stroke-width=".7"/>
+      </g>`;
+      return s;
+    },
+
+    stars(W, H) {
+      const R = rng(9), m = Math.min(W, H);
+      let s = `<defs>
+        <radialGradient id="mg" cx=".5" cy=".45" r=".75"><stop offset="0" stop-color="#e44ee8"/><stop offset=".55" stop-color="#a21caf"/><stop offset="1" stop-color="#4a044e"/></radialGradient>
+        <filter id="haze"><feGaussianBlur stdDeviation="${r1(m * 0.08)}"/></filter>
+        <filter id="sg" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      </defs><rect width="${W}" height="${H}" fill="url(#mg)"/>`;
+      s += `<g filter="url(#haze)" opacity=".35">` + [0, 1, 2, 3].map(() => `<circle cx="${r1(R() * W)}" cy="${r1(R() * H)}" r="${r1(m * (0.15 + R() * 0.2))}" fill="#f5b8ff"/>`).join('') + '</g>';
+      s += starDots(R, 280, W, H, 1, '#fff');
+      s += '<g filter="url(#sg)">';
+      for (let i = 0; i < 34; i++) {
+        const x = R() * W, y = R() * H, r = m * (0.008 + R() * R() * 0.035);
+        s += sparkle(x, y, r, '#fff', 0.7 + R() * 0.3);
+        if (r > m * 0.018) s += `<path d="M${r1(x - r * 2.6)} ${r1(y)} H${r1(x + r * 2.6)} M${r1(x)} ${r1(y - r * 2.6)} V${r1(y + r * 2.6)}" stroke="#fff" stroke-width=".7" opacity=".55"/>`;
+      }
+      return s + '</g>';
+    },
+
+    snow(W, H) {
+      const R = rng(13), m = Math.min(W, H);
+      let s = `<defs>
+        <linearGradient id="ice" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e9f1f9"/><stop offset="1" stop-color="#9fb9d6"/></linearGradient>
+        <radialGradient id="shine" cx="0" cy=".4" r=".7"><stop offset="0" stop-color="#fff" stop-opacity=".7"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+        <filter id="fg" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="1.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      </defs><rect width="${W}" height="${H}" fill="url(#ice)"/><rect width="${W}" height="${H}" fill="url(#shine)"/>`;
+      const flake = (cx, cy, r, sw, col, op) => {
+        const arm = `M0 0 V${r1(-r)} M0 ${r1(-r * 0.5)} L${r1(r * 0.22)} ${r1(-r * 0.72)} M0 ${r1(-r * 0.5)} L${r1(-r * 0.22)} ${r1(-r * 0.72)} M0 ${r1(-r * 0.76)} L${r1(r * 0.14)} ${r1(-r * 0.9)} M0 ${r1(-r * 0.76)} L${r1(-r * 0.14)} ${r1(-r * 0.9)}`;
+        return `<g transform="translate(${r1(cx)} ${r1(cy)}) rotate(${Math.round(R() * 60)})" stroke="${col}" stroke-width="${r1(sw)}" stroke-linecap="round" fill="none" opacity="${r1(op * 10) / 10}">` +
+          [0, 60, 120, 180, 240, 300].map(a => `<path d="${arm}" transform="rotate(${a})"/>`).join('') + '</g>';
+      };
+      s += starDots(R, 220, W, H, 1, '#fff');
+      s += '<g filter="url(#fg)">';
+      for (let i = 0; i < 26; i++) {
+        const q = R();
+        s += flake(W * (-0.05 + q * q * 0.34), R() * H, m * (0.05 + (1 - q) * 0.12 * R() + 0.02), 1.5 + R() * 2.5, R() < 0.3 ? '#d6e8f8' : '#fff', 0.75 + R() * 0.25);
+      }
+      for (let i = 0; i < 26; i++) s += flake(W * (0.3 + R() * 0.7), R() * H, m * (0.012 + R() * 0.03), 1 + R(), '#fff', 0.5 + R() * 0.4);
+      for (let i = 0; i < 14; i++) s += sparkle(R() * W, R() * H, m * (0.006 + R() * 0.012), '#fff', 0.9);
+      return s + '</g>';
+    },
+
+    aurora(W, H) {
+      const R = rng(21), m = Math.min(W, H);
+      let s = `<defs>
+        <linearGradient id="nsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#01030c"/><stop offset=".6" stop-color="#071a2e"/><stop offset="1" stop-color="#0d2b3f"/></linearGradient>
+        <linearGradient id="au" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#34d399"/><stop offset=".5" stop-color="#22d3ee"/><stop offset="1" stop-color="#a78bfa"/></linearGradient>
+        <filter id="ab" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="${r1(m * 0.035)}"/></filter>
+      </defs><rect width="${W}" height="${H}" fill="url(#nsky)"/>${starDots(R, 160, W, H, 0.7, '#fff')}`;
+      s += '<g filter="url(#ab)" fill="none" stroke-linecap="round">';
+      for (let i = 0; i < 4; i++) {
+        const y0 = H * (0.18 + i * 0.08 + R() * 0.04);
+        s += `<path d="M${r1(-W * 0.1)} ${r1(y0)} C${r1(W * 0.3)} ${r1(y0 - H * 0.15)} ${r1(W * 0.6)} ${r1(y0 + H * 0.1)} ${r1(W * 1.1)} ${r1(y0 - H * 0.08)}" stroke="url(#au)" stroke-width="${r1(m * (0.08 + R() * 0.08))}" opacity="${r1((0.35 + R() * 0.25) * 10) / 10}"/>`;
+      }
+      s += '</g>';
+      s += `<path d="M0 ${r1(H * 0.78)} L${r1(W * 0.15)} ${r1(H * 0.66)} L${r1(W * 0.28)} ${r1(H * 0.74)} L${r1(W * 0.45)} ${r1(H * 0.6)} L${r1(W * 0.62)} ${r1(H * 0.73)} L${r1(W * 0.8)} ${r1(H * 0.64)} L${W} ${r1(H * 0.72)} V${H} H0 Z" fill="#030b16"/>`;
+      let trees = '';
+      for (let x = -10; x < W + 20; x += m * (0.04 + R() * 0.03)) {
+        const h = m * (0.08 + R() * 0.1), w = h * 0.38, b = H * (0.9 + R() * 0.03);
+        trees += `<path d="M${r1(x)} ${r1(b - h)} L${r1(x + w)} ${r1(b)} L${r1(x - w)} ${r1(b)} Z"/>`;
+      }
+      return s + `<g fill="#01050b">${trees}</g><rect y="${r1(H * 0.92)}" width="${W}" height="${r1(H * 0.08)}" fill="#01050b"/>`;
+    },
+
+    sunset(W, H) {
+      const R = rng(17), m = Math.min(W, H), hz = H * 0.66;
+      let s = `<defs>
+        <linearGradient id="ss" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b1055"/><stop offset=".4" stop-color="#7b2e8e"/><stop offset=".8" stop-color="#f2706b"/><stop offset="1" stop-color="#ffb36b"/></linearGradient>
+        <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff8a65"/><stop offset=".35" stop-color="#7b2e6e"/><stop offset="1" stop-color="#1a0b33"/></linearGradient>
+        <radialGradient id="sg2"><stop offset=".3" stop-color="#ffe0a8" stop-opacity=".8"/><stop offset="1" stop-color="#ffe0a8" stop-opacity="0"/></radialGradient>
+        <filter id="cb" x="-30%" y="-80%" width="160%" height="260%"><feGaussianBlur stdDeviation="${r1(m * 0.02)}"/></filter>
+      </defs><rect width="${W}" height="${r1(hz)}" fill="url(#ss)"/>`;
+      s += `<circle cx="${W / 2}" cy="${r1(hz)}" r="${r1(m * 0.45)}" fill="url(#sg2)"/><circle cx="${W / 2}" cy="${r1(hz)}" r="${r1(m * 0.16)}" fill="#ffd59a"/>`;
+      s += '<g filter="url(#cb)">';
+      for (let i = 0; i < 6; i++) s += `<ellipse cx="${r1(R() * W)}" cy="${r1(H * (0.22 + R() * 0.32))}" rx="${r1(m * (0.18 + R() * 0.2))}" ry="${r1(m * 0.025)}" fill="#ffb4a2" opacity=".55"/>`;
+      s += `</g><rect y="${r1(hz)}" width="${W}" height="${r1(H - hz)}" fill="url(#sea)"/>`;
+      for (let i = 0; i < 14; i++) {
+        const y = hz + (i + 1) * (H - hz) / 16, w = m * 0.32 * (1 - i / 16) * (0.6 + R() * 0.5);
+        s += `<rect x="${r1(W / 2 - w / 2 + (R() - 0.5) * 10)}" y="${r1(y)}" width="${r1(w)}" height="${r1(1.5 + R() * 2.5)}" rx="1.5" fill="#ffd59a" opacity="${r1((0.65 - i * 0.035) * 10) / 10}"/>`;
+      }
+      for (let i = 0; i < 5; i++) {
+        const x = W * (0.2 + R() * 0.6), y = H * (0.2 + R() * 0.25), b = m * (0.012 + R() * 0.012);
+        s += `<path d="M${r1(x - b)} ${r1(y)} Q${r1(x - b / 2)} ${r1(y - b * 0.7)} ${r1(x)} ${r1(y)} Q${r1(x + b / 2)} ${r1(y - b * 0.7)} ${r1(x + b)} ${r1(y)}" stroke="#2b1035" stroke-width="1.6" fill="none" stroke-linecap="round"/>`;
+      }
+      return s;
+    },
+
+    sakura(W, H) {
+      const R = rng(29), m = Math.min(W, H);
+      let s = `<defs><linearGradient id="pk" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff6f9"/><stop offset="1" stop-color="#f9d3e2"/></linearGradient></defs>` +
+        `<rect width="${W}" height="${H}" fill="url(#pk)"/>`;
+      const blossom = (x, y, r, col) => {
+        let g = '';
+        for (let k = 0; k < 5; k++) g += `<ellipse cx="0" cy="${r1(-r * 0.55)}" rx="${r1(r * 0.42)}" ry="${r1(r * 0.55)}" transform="rotate(${k * 72})" fill="${col}" stroke="#f08db0" stroke-width=".7"/>`;
+        g += `<circle r="${r1(r * 0.2)}" fill="#e2557f"/>`;
+        for (let k = 0; k < 6; k++) { const a = k * Math.PI / 3; g += `<circle cx="${r1(Math.cos(a) * r * 0.32)}" cy="${r1(Math.sin(a) * r * 0.32)}" r="${r1(r * 0.05)}" fill="#c2185b"/>`; }
+        return `<g transform="translate(${r1(x)} ${r1(y)}) rotate(${Math.round(R() * 72)})">${g}</g>`;
+      };
+      const branch = (p0, p1, p2, p3, w, n) => {
+        let g = `<path d="M${r1(p0[0])} ${r1(p0[1])} C${r1(p1[0])} ${r1(p1[1])} ${r1(p2[0])} ${r1(p2[1])} ${r1(p3[0])} ${r1(p3[1])}" stroke="#5b3a35" stroke-width="${r1(w)}" fill="none" stroke-linecap="round"/>`;
+        let flowers = '';
+        for (let i = 0; i < n; i++) {
+          const [x, y] = bez(p0, p1, p2, p3, 0.15 + R() * 0.85);
+          flowers += blossom(x + (R() - 0.5) * m * 0.08, y + (R() - 0.5) * m * 0.07, m * (0.025 + R() * 0.025), ['#f9b8cf', '#ffd6e4', '#ffffff', '#f7a1c0'][Math.floor(R() * 4)]);
+        }
+        return g + flowers;
+      };
+      s += branch([-W * 0.05, H * 0.04], [W * 0.2, H * 0.02], [W * 0.45, H * 0.2], [W * 0.82, H * 0.17], m * 0.024, 16);
+      s += branch([W * 0.2, H * 0.08], [W * 0.25, H * 0.15], [W * 0.3, H * 0.25], [W * 0.26, H * 0.33], m * 0.012, 6);
+      s += branch([W * 1.05, H * 0.96], [W * 0.85, H * 0.9], [W * 0.75, H * 0.84], [W * 0.55, H * 0.83], m * 0.018, 9);
+      for (let i = 0; i < 34; i++) s += `<ellipse cx="${r1(R() * W)}" cy="${r1(R() * H)}" rx="${r1(m * 0.008)}" ry="${r1(m * 0.013)}" fill="#f7a8c4" opacity=".7" transform="rotate(${Math.round(R() * 180)} ${0})"/>`.replace(/cx="([\d.]+)" cy="([\d.]+)"(.*)rotate\((\d+) 0\)/, (all, cx, cy, mid, a) => `cx="${cx}" cy="${cy}"${mid}rotate(${a} ${cx} ${cy})`);
+      return s;
+    }
+  };
+
+  function sceneUrl(id, W, H) {
+    const draw = SCENE_DRAW[id];
+    if (!draw) return 'none';
+    W = Math.max(120, Math.round(W)); H = Math.max(120, Math.round(H));
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid slice">${draw(W, H)}</svg>`;
+    return `url('data:image/svg+xml,${encodeURIComponent(svg)}')`;
+  }
+
+  // Egy 140×140-es csempe két, eltérően elforgatott motívummal, így szórt, nyomatszerű hatást ad
+  function patternCss(kind, color, op) {
+    const m = MOTIFS[kind];
+    if (!m) return 'none';
+    const filled = typeof m === 'object';
+    const body = filled ? m.body : m;
+    const paint = filled
+      ? `fill="${color}" stroke="none" opacity="${(op * 0.75).toFixed(3)}"`
+      : `fill="none" stroke="${color}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity="${op}"`;
+    const second = kind === 'feet' ? 'translate(104 102) rotate(20) scale(-0.85 0.85)' : 'translate(104 102) rotate(18) scale(0.85)';
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="140" height="140" viewBox="0 0 140 140"><g ${paint}>` +
+      `<g transform="translate(36 38) rotate(-14)">${body}</g><g transform="${second}">${body}</g></g></svg>`;
+    return `url('data:image/svg+xml,${encodeURIComponent(svg)}')`;
+  }
+
+  function applyAppearance() {
+    const s = state.settings, root = document.documentElement, dark = isDark();
+    if (s.theme === 'auto') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', s.theme);
+    root.dataset.finish = s.finish;
+    const tint = TINTS[s.bgTint];
+    const bg = dark ? tint[2] : tint[0];
+    const card = dark ? tint[3] : tint[1];
+    const accent = accentFor(s.accent, dark, s.finish);
+    const accentText = contrast(accent, '#ffffff') >= contrast(accent, '#0b1220') ? '#ffffff' : '#0b1220';
+    state.resolvedAccent = accent;
+    root.style.setProperty('--bg', bg);
+    root.style.setProperty('--card', card);
+    root.style.setProperty('--accent', accent);
+    root.style.setProperty('--accent-text', accentText);
+    root.style.setProperty('--font', FONTS[s.font]);
+    const hasScene = s.scene !== 'none';
+    root.classList.toggle('has-scene', hasScene);
+    root.style.setProperty('--pattern', hasScene ? 'none' : patternCss(s.pattern, accent, dark ? 0.28 : 0.24));
+    const layer = $('sceneLayer');
+    if (s.scene === 'custom') layer.style.backgroundImage = `url("${state.customBg}")`;
+    else if (hasScene) {
+      const key = `${s.scene}|${sceneSize[0]}|${sceneSize[1]}`;
+      if (layer.dataset.key !== key) { layer.style.backgroundImage = sceneUrl(s.scene, sceneSize[0], sceneSize[1]); layer.dataset.key = key; }
+    } else { layer.style.backgroundImage = 'none'; layer.dataset.key = ''; }
+    if (s.scene === 'custom') layer.dataset.key = '';
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', bg);
+  }
+  if (darkMq.addEventListener) darkMq.addEventListener('change', () => { if (state.settings.theme === 'auto') renderAll(); });
+
+  // A háttérkép a képernyő méretére rajzolódik; csak szélességváltáskor vagy nagy magasságváltáskor rajzoljuk újra
+  // (mobilon görgetéskor a címsor eltűnése miatt kicsit változik a magasság)
+  let sceneSize = [window.innerWidth, window.innerHeight];
+  let resizeTimer = null;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      const w = window.innerWidth, h = window.innerHeight;
+      if (Math.abs(w - sceneSize[0]) > 2 || Math.abs(h - sceneSize[1]) / sceneSize[1] > 0.2) { sceneSize = [w, h]; applyAppearance(); }
+    }, 250);
+  });
+  const scenePreviews = {};
+  function scenePreview(id) { return scenePreviews[id] || (scenePreviews[id] = sceneUrl(id, 220, 130)); }
+
+  // Saját kép: legfeljebb 1600 px-re kicsinyítve, JPEG-ként tároljuk a böngészőben
+  function downscaleImage(file, max, quality) {
+    return new Promise((resolve, reject) => {
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        const k = Math.min(1, max / Math.max(img.width, img.height));
+        const c = document.createElement('canvas');
+        c.width = Math.round(img.width * k);
+        c.height = Math.round(img.height * k);
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        URL.revokeObjectURL(url);
+        resolve(c.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('load')); };
+      img.src = url;
+    });
+  }
+  async function onBgFile(ev) {
+    const file = ev.target.files && ev.target.files[0];
+    ev.target.value = '';
+    if (!file) return;
+    let dataUrl;
+    try { dataUrl = await downscaleImage(file, 1600, 0.82); } catch (e) { toast(t('bgError'), 'danger', 4000); return; }
+    try { localStorage.setItem('hk.customBg.v1', dataUrl); } catch (e) { toast(t('bgTooLarge'), 'danger', 4500); return; }
+    state.customBg = dataUrl;
+    state.settings.scene = 'custom';
+    persist('settings');
+    renderAll();
+    toast(t('bgSaved'));
+  }
+  function removeCustomBg() {
+    try { localStorage.removeItem('hk.customBg.v1'); } catch (e) { /* nincs tárolás */ }
+    state.customBg = null;
+    if (state.settings.scene === 'custom') state.settings.scene = 'none';
+    persist('settings');
+    renderAll();
+    toast(t('bgRemoved'));
+  }
+
+  // ---------- Keretek ----------
+  function getBudget(cur) {
+    const b = state.budgets[cur] || {};
+    return { total: typeof b.total === 'number' ? b.total : null, cats: b.cats || {} };
+  }
+  function budgetStatus(spent, limit) {
+    if (!limit) return null;
+    if (spent > limit) return 'over';
+    if (spent >= limit * 0.8) return 'warn';
+    return 'ok';
+  }
+  const RANK = { ok: 0, warn: 1, over: 2 };
+  function budgetState(month, cur, cat) {
+    const items = state.expenses.filter(e => monthOf(e.date) === month && e.currency === cur);
+    const total = items.reduce((s, e) => s + e.amount, 0);
+    const catTotal = items.filter(e => e.category === cat).reduce((s, e) => s + e.amount, 0);
+    const b = getBudget(cur);
+    const catLimit = b.cats[cat] || null;
+    return {
+      t: budgetStatus(total, b.total), tOver: total - (b.total || 0),
+      c: budgetStatus(catTotal, catLimit), cOver: catTotal - (catLimit || 0)
+    };
+  }
+  function budgetAlert(before, after, cur, cat) {
+    const up = (a, b) => a && RANK[a] > RANK[b || 'ok'];
+    if (up(after.t, before.t) && after.t === 'over') return { kind: 'danger', msg: t('alertTotalOver')(cur, fmtMoney(after.tOver, cur)) };
+    if (up(after.c, before.c) && after.c === 'over') return { kind: 'danger', msg: t('alertCatOver')(catName(cat), fmtMoney(after.cOver, cur)) };
+    if (up(after.t, before.t)) return { kind: 'warn', msg: t('alertTotalWarn')(cur) };
+    if (up(after.c, before.c)) return { kind: 'warn', msg: t('alertCatWarn')(catName(cat)) };
+    return null;
+  }
+
+  // ---------- Megjelenítés ----------
+  function applyStaticTexts() {
+    document.documentElement.lang = state.settings.lang;
+    document.title = t('appTitle');
+    document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => { el.placeholder = t(el.dataset.i18nPlaceholder); });
+    document.querySelectorAll('[data-i18n-aria]').forEach(el => { el.setAttribute('aria-label', t(el.dataset.i18nAria)); });
+    $('settingsBadge').textContent = `${state.settings.lang.toUpperCase()} · ${state.settings.currency}`;
+    $('formTitle').textContent = t(state.form.editingId ? 'editExpense' : 'newExpense');
+    $('saveBtn').textContent = t(state.form.editingId ? 'saveChanges' : 'save');
+  }
+
+  function segButtons(key, values, labelFn) {
+    return values.map(v => `<button type="button" data-set="${key}" data-val="${v}" aria-pressed="${state.settings[key] === v}">${esc(labelFn(v))}</button>`).join('');
+  }
+
+  function renderSettings() {
+    const s = state.settings, dark = isDark();
+    const tabs = [['general', 'tabGeneral'], ['look', 'tabLook'], ['categories', 'tabCategories'], ['budget', 'tabBudget'], ['data', 'tabData']];
+    $('settingsTabs').innerHTML = tabs.map(([id, key]) =>
+      `<button type="button" role="tab" data-tab="${id}" aria-selected="${state.settingsTab === id}">${esc(t(key))}</button>`).join('');
+    document.querySelectorAll('.tab-panel').forEach(p => { p.hidden = p.dataset.panel !== state.settingsTab; });
+
+    $('langSeg').innerHTML = Object.keys(LANGS).map(l =>
+      `<button type="button" data-set="lang" data-val="${l}" aria-pressed="${l === s.lang}" lang="${l}">${LANGS[l]}</button>`).join('');
+    $('curSeg').innerHTML = segButtons('currency', CURRENCIES, c => c);
+
+    $('themeSeg').innerHTML = segButtons('theme', THEMES, v => ({ auto: '◐ ', light: '☀ ', dark: '☾ ' }[v]) + t('themes')[v]);
+    $('accentSeg').innerHTML = Object.keys(ACCENTS).map(k => {
+      const col = accentFor(k, dark, s.finish);
+      const gloss = s.finish === 'glossy' ? 'background-image:linear-gradient(180deg,rgba(255,255,255,.4),rgba(255,255,255,0) 60%);' : '';
+      return `<button type="button" class="swatch" data-set="accent" data-val="${k}" aria-pressed="${s.accent === k}" aria-label="${esc(t('accents')[k])}" title="${esc(t('accents')[k])}" style="background-color:${col};${gloss}"></button>`;
+    }).join('');
+    $('finishSeg').innerHTML = segButtons('finish', FINISHES, v => ({ glossy: '✨ ', matte: '◻ ' }[v]) + t('finishes')[v]);
+    $('tintSeg').innerHTML = Object.keys(TINTS).map(k => {
+      const tt = TINTS[k];
+      return `<button type="button" class="tile" data-set="bgTint" data-val="${k}" aria-pressed="${s.bgTint === k}">
+        <span class="prev" style="background:linear-gradient(135deg, ${dark ? tt[2] : tt[0]} 55%, ${dark ? tt[3] : tt[1]} 55%)"></span>
+        <span class="lbl">${esc(t('tints')[k])}</span></button>`;
+    }).join('');
+    const sceneTiles = ['none', ...SCENES, ...(state.customBg ? ['custom'] : [])];
+    $('sceneSeg').innerHTML = sceneTiles.map(id => {
+      const bg = id === 'none' ? 'background-color:var(--bg)'
+        : id === 'custom' ? `background-image:url('${state.customBg}')` : `background-image:${scenePreview(id)}`;
+      return `<button type="button" class="tile" data-set="scene" data-val="${id}" aria-pressed="${s.scene === id}">
+        <span class="prev scene" style="${bg}"></span><span class="lbl">${esc(t('scenes')[id])}</span></button>`;
+    }).join('');
+    $('bgUploadLbl').textContent = t(state.customBg ? 'replaceBg' : 'uploadBg');
+    $('bgRemove').hidden = !state.customBg;
+    $('patternSeg').innerHTML = PATTERNS.map(p => `
+      <button type="button" class="tile" data-set="pattern" data-val="${p}" aria-pressed="${s.scene === 'none' && s.pattern === p}">
+        <span class="prev" style="background-color:var(--bg);background-image:${patternCss(p, state.resolvedAccent, dark ? 0.6 : 0.5)};background-size:80px 80px;background-position:-6px -6px"></span>
+        <span class="lbl">${esc(t('patterns')[p])}</span></button>`).join('');
+    $('fontSeg').innerHTML = Object.keys(FONTS).map(f => `
+      <button type="button" class="font-opt" data-set="font" data-val="${f}" aria-pressed="${s.font === f}" style="font-family:${esc(FONTS[f])}">
+        <b>${esc(t('fonts')[f])}</b><span>${esc(t('fontSample'))}</span></button>`).join('');
+
+    renderCatManager();
+    renderBudgetSettings();
+  }
+
+  function renderCatManager() {
+    $('catList').innerHTML = allCats().map(c => {
+      const custom = !!customCat(c);
+      return `<li class="cat-row">
+        <span class="badge" style="--c:${catColor(c)}" aria-hidden="true">${catIcon(c)}</span>
+        <span class="nm">${esc(catName(c))}<small>${esc(t(custom ? 'customTag' : 'builtIn'))}</small></span>
+        ${custom ? `<button type="button" class="small-btn del" data-delcat="${c}">${esc(t('delete'))}</button>` : ''}
+      </li>`;
+    }).join('');
+    $('newCatIcon').innerHTML = CUSTOM_ICONS.map(i =>
+      `<button type="button" data-newicon="${i}" aria-pressed="${state.newCat.icon === i}">${i}</button>`).join('');
+    $('newCatColor').innerHTML = CUSTOM_COLORS.map(c =>
+      `<button type="button" class="swatch" data-newcolor="${c}" aria-pressed="${state.newCat.color === c}" aria-label="${c}" style="background-color:${c}"></button>`).join('');
+  }
+
+  function renderBudgetSettings() {
+    const cur = state.budgetCur;
+    $('budgetCurSeg').innerHTML = CURRENCIES.map(c =>
+      `<button type="button" data-budgetcur="${c}" aria-pressed="${c === cur}">${c}</button>`).join('');
+    const b = getBudget(cur);
+    const total = $('budgetTotal');
+    total.value = b.total != null ? fmtPlain(b.total) : '';
+    total.removeAttribute('aria-invalid');
+    $('budgetCats').innerHTML = allCats().map(c => `
+      <div class="budget-row">
+        <label class="nm" for="bc-${c}"><span class="badge" style="--c:${catColor(c)}" aria-hidden="true">${catIcon(c)}</span>${esc(catName(c))}</label>
+        <input type="text" id="bc-${c}" inputmode="decimal" data-budget-cat="${c}" value="${b.cats[c] ? esc(fmtPlain(b.cats[c])) : ''}" placeholder="${esc(t('budgetPh'))}">
+      </div>`).join('');
+  }
+
+  function monthExpenses(m) { return state.expenses.filter(e => monthOf(e.date) === m); }
+  function sortCurrencies(curs) {
+    return curs.sort((a, b) =>
+      (a === state.settings.currency ? -1 : b === state.settings.currency ? 1 : CURRENCIES.indexOf(a) - CURRENCIES.indexOf(b)));
+  }
+  function monthTotals(m) {
+    const items = monthExpenses(m);
+    const totals = {};
+    items.forEach(e => { totals[e.currency] = (totals[e.currency] || 0) + e.amount; });
+    return { totals, currencies: sortCurrencies(Object.keys(totals)), count: items.length };
+  }
+  function totalsText(totals, curs) { return curs.map(c => fmtMoney(totals[c], c)).join(' + '); }
+  // Az elmúlt 12 hónap, a legfrissebb (aktuális) hónappal kezdve
+  function last12Months() {
+    const cur = monthOf(todayStr());
+    return Array.from({ length: 12 }, (_, i) => shiftMonth(cur, -i));
+  }
+
+  function renderBanner() {
+    const m = state.closedBanner;
+    $('closeBanner').hidden = !m;
+    if (!m) return;
+    const mt = monthTotals(m);
+    $('bannerText').textContent = t('monthClosed')(fmtMonth(m));
+    $('bannerTotals').textContent = mt.count ? totalsText(mt.totals, mt.currencies) : t('noSpending');
+  }
+
+  function renderHistory() {
+    const current = monthOf(todayStr());
+    const yearTotals = {};
+    $('history').innerHTML = last12Months().map(m => {
+      const mt = monthTotals(m);
+      mt.currencies.forEach(c => { yearTotals[c] = (yearTotals[c] || 0) + mt.totals[c]; });
+      const status = m === current ? t('inProgress') : t('closed');
+      const over = mt.currencies.some(c => budgetStatus(mt.totals[c], getBudget(c).total) === 'over');
+      return `<li><button type="button" class="hist-row" data-month="${m}" aria-current="${m === state.viewMonth}">
+        <span class="hm">${esc(fmtMonth(m))}<small>${esc(status)} · ${esc(t('items')(mt.count))}${over ? ` · <span class="overtag">⚠ ${esc(t('overBudget'))}</span>` : ''}</small></span>
+        <span class="ht${mt.count ? '' : ' none'}">${mt.count
+          ? mt.currencies.map(c => `<div>${esc(fmtMoney(mt.totals[c], c))}</div>`).join('')
+          : esc(t('noSpending'))}</span>
+      </button></li>`;
+    }).join('');
+    const yc = sortCurrencies(Object.keys(yearTotals));
+    $('yearTotal').innerHTML = `<span>${esc(t('yearTotal'))}</span><span class="vals">${yc.length
+      ? yc.map(c => `<div>${esc(fmtMoney(yearTotals[c], c))}</div>`).join('')
+      : esc(fmtMoney(0, state.settings.currency))}</span>`;
+  }
+
+  function renderBudgetBox(totals) {
+    const curs = CURRENCIES.filter(c => getBudget(c).total && (totals[c] || c === state.settings.currency));
+    if (!curs.length) {
+      $('budgetBox').innerHTML = `<div class="budget-cta"><button type="button" class="link-btn" data-open-budget>🎯 ${esc(t('setBudget'))}</button></div>`;
+      return;
+    }
+    $('budgetBox').innerHTML = curs.map(c => {
+      const spent = totals[c] || 0, lim = getBudget(c).total, st = budgetStatus(spent, lim);
+      const ratio = spent / lim;
+      const msg = st === 'over' ? t('budgetOver')(fmtMoney(spent - lim, c))
+        : st === 'warn' ? t('budgetWarn')(fmtPct(ratio), fmtMoney(lim - spent, c))
+        : t('budgetOk')(fmtMoney(lim - spent, c));
+      return `<div class="budget ${st}" data-cur="${c}">
+        <div class="budget-top"><span>🎯 ${esc(t('budget'))}${curs.length > 1 ? ' · ' + c : ''}</span>
+          <span class="nums">${esc(fmtMoney(spent, c))} / ${esc(fmtMoney(lim, c))} · ${esc(fmtPct(ratio))}</span></div>
+        <div class="track" aria-hidden="true"><div class="fill" style="width:${Math.min(ratio, 1) * 100}%"></div></div>
+        <div class="budget-msg">${st === 'ok' ? '✓' : '⚠'} ${esc(msg)}</div>
+      </div>`;
+    }).join('');
+  }
+
+  function renderSummary() {
+    const m = state.viewMonth;
+    $('monthLabel').textContent = fmtMonth(m);
+    const current = monthOf(todayStr());
+    $('todayMonth').hidden = m === current;
+    const pill = $('monthStatus');
+    pill.hidden = m > current;
+    pill.textContent = m === current ? t('inProgress') : t('closedMonth');
+    pill.classList.toggle('closed', m < current);
+    const items = monthExpenses(m);
+    const { totals, currencies: curs } = monthTotals(m);
+    if (!curs.length) {
+      $('totals').innerHTML = `<div class="big">${esc(fmtMoney(0, state.settings.currency))}</div>`;
+    } else {
+      const multi = curs.length > 1;
+      $('totals').innerHTML = curs.map(c => {
+        const over = budgetStatus(totals[c], getBudget(c).total) === 'over';
+        return `<div class="big${multi ? ' multi' : ''}${over ? ' over' : ''}" data-cur="${c}">${esc(fmtMoney(totals[c], c))}</div>`;
+      }).join('');
+    }
+    $('multiHint').hidden = curs.length < 2;
+    renderBudgetBox(totals);
+
+    // Diagram
+    if (!curs.includes(state.chartCurrency)) state.chartCurrency = curs[0] || null;
+    const seg = $('chartCurrency');
+    seg.hidden = curs.length < 2;
+    seg.innerHTML = curs.length < 2 ? '' : curs.map(c =>
+      `<button type="button" data-chartcur="${c}" aria-pressed="${c === state.chartCurrency}">${c}</button>`).join('');
+    const cur = state.chartCurrency;
+    if (!cur) {
+      $('bars').innerHTML = '';
+      $('chartEmpty').hidden = false;
+      return;
+    }
+    $('chartEmpty').hidden = true;
+    const byCat = {};
+    items.filter(e => e.currency === cur).forEach(e => { byCat[e.category] = (byCat[e.category] || 0) + e.amount; });
+    const total = totals[cur];
+    const rows = Object.keys(byCat).sort((a, b) => byCat[b] - byCat[a]);
+    const max = byCat[rows[0]];
+    const limits = getBudget(cur).cats;
+    $('bars').innerHTML = rows.map(c => {
+      const lim = limits[c];
+      const st = budgetStatus(byCat[c], lim);
+      const fillColor = st === 'over' ? 'var(--danger)' : catColor(c);
+      const limitLine = lim
+        ? `<div class="bar-limit ${st}">${st !== 'ok' ? '⚠ ' : ''}${esc(t('limitShort'))}: ${esc(fmtMoney(lim, cur))} · ${esc(fmtPct(byCat[c] / lim))}</div>` : '';
+      return `
+      <li class="bar-row" data-cat="${c}">
+        <div class="bar-top">
+          <span class="bar-name"><span class="dot" style="background:${catColor(c)}"></span>${catIcon(c)} ${esc(catName(c))}</span>
+          <span class="bar-val">${esc(fmtMoney(byCat[c], cur))}<span class="pct">${esc(fmtPct(byCat[c] / total))}</span></span>
+        </div>
+        <div class="track" aria-hidden="true"><div class="fill" style="width:${(byCat[c] / max * 100).toFixed(1)}%;background-color:${fillColor}"></div></div>
+        ${limitLine}
+      </li>`;
+    }).join('');
+  }
+
+  function renderChips() {
+    if (!isCat(state.form.cat)) state.form.cat = 'other';
+    $('chips').innerHTML = allCats().map(c => `
+      <button type="button" class="chip" data-cat="${c}" style="--c:${catColor(c)}" aria-pressed="${c === state.form.cat}">
+        <span aria-hidden="true">${catIcon(c)}</span>${esc(catName(c))}
+      </button>`).join('');
+    const f = state.form;
+    let key;
+    if (f.manual) key = 'catManual';
+    else if (f.source === 'saved') key = 'catSaved';
+    else if (f.source === 'learned') key = 'catLearned';
+    else if (f.source === 'keyword') key = 'catAuto';
+    else key = $('note').value.trim() ? 'catNone' : '';
+    $('catHint').textContent = key ? t(key) : '';
+  }
+
+  function renderCurrencySelect() {
+    const sel = $('formCurrency');
+    const val = sel.value || state.settings.currency;
+    sel.innerHTML = CURRENCIES.map(c => `<option value="${c}">${c}</option>`).join('');
+    sel.value = val;
+  }
+
+  function renderFilters() {
+    const months = new Set(state.expenses.map(e => monthOf(e.date)));
+    months.add(state.viewMonth);
+    months.add(monthOf(todayStr()));
+    const list = [...months].sort().reverse();
+    $('fMonth').innerHTML = `<option value="all">${esc(t('allMonths'))}</option>` +
+      list.map(m => `<option value="${m}">${esc(fmtMonth(m))}</option>`).join('');
+    $('fMonth').value = state.listAll ? 'all' : state.viewMonth;
+    if (state.filterCat !== 'all' && !isCat(state.filterCat)) state.filterCat = 'all';
+    $('fCat').innerHTML = `<option value="all">${esc(t('allCategories'))}</option>` +
+      allCats().map(c => `<option value="${c}">${esc(catName(c))}</option>`).join('');
+    $('fCat').value = state.filterCat;
+  }
+
+  function filteredExpenses() {
+    const q = normalize(state.search);
+    return state.expenses
+      .filter(e => state.listAll || monthOf(e.date) === state.viewMonth)
+      .filter(e => state.filterCat === 'all' || e.category === state.filterCat)
+      .filter(e => !q || normalize(e.note).includes(q))
+      .sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : b.createdAt - a.createdAt));
+  }
+
+  function renderList() {
+    const items = filteredExpenses();
+    $('count').textContent = t('items')(items.length);
+    $('listEmpty').hidden = items.length > 0;
+    $('items').innerHTML = items.map(e => `
+      <li class="item" data-id="${e.id}">
+        <div class="badge" style="--c:${catColor(e.category)}" aria-hidden="true">${catIcon(e.category)}</div>
+        <div>
+          <div class="note${e.note ? '' : ' empty'}">${e.note ? esc(e.note) : esc(t('noNote'))}</div>
+          <div class="meta">${esc(fmtDate(e.date))} · ${esc(catName(e.category))}</div>
+        </div>
+        <div class="amt">${esc(fmtMoney(e.amount, e.currency))}</div>
+        <div class="ops">
+          <button type="button" class="small-btn" data-edit="${e.id}">${esc(t('edit'))}</button>
+          <button type="button" class="small-btn del" data-del="${e.id}">${esc(t('delete'))}</button>
+        </div>
+      </li>`).join('');
+  }
+
+  function refresh() {
+    renderSummary();
+    renderFilters();
+    renderList();
+    renderHistory();
+    renderBanner();
+  }
+
+  function renderAll() {
+    applyAppearance();
+    applyStaticTexts();
+    renderSettings();
+    renderCurrencySelect();
+    renderChips();
+    refresh();
+    if (state.form.errorKey) showError(state.form.errorKey);
+  }
+
+  // ---------- Űrlap ----------
+  function showError(key) {
+    state.form.errorKey = key;
+    const box = $('formError');
+    if (!key) { box.hidden = true; box.textContent = ''; $('amount').removeAttribute('aria-invalid'); $('date').removeAttribute('aria-invalid'); return; }
+    box.textContent = t(key);
+    box.hidden = false;
+    if (key === 'errDate') $('date').setAttribute('aria-invalid', 'true'); else $('amount').setAttribute('aria-invalid', 'true');
+  }
+
+  function resetForm() {
+    state.form = { editingId: null, cat: 'other', manual: false, source: 'none', errorKey: null };
+    $('amount').value = '';
+    $('note').value = '';
+    $('date').value = todayStr();
+    $('formCurrency').value = state.settings.currency;
+    $('cancelEdit').hidden = true;
+    showError(null);
+    applyStaticTexts();
+    renderChips();
+  }
+
+  function onNoteInput() {
+    if (state.form.manual) return;
+    const s = suggest($('note').value);
+    state.form.cat = s.cat;
+    state.form.source = s.source;
+    renderChips();
+  }
+
+  function onSubmit(ev) {
+    ev.preventDefault();
+    const amt = parseAmount($('amount').value);
+    if (amt.error) { showError(amt.error); $('amount').focus(); return; }
+    const date = $('date').value;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || isNaN(parseDate(date))) { showError('errDate'); $('date').focus(); return; }
+    showError(null);
+    const currency = $('formCurrency').value;
+    const note = $('note').value.trim();
+    const cat = state.form.cat;
+    const amount = Number(amt.value.toFixed(digits(currency)));
+    if (state.form.manual && suggest(note).cat !== cat) learn(note, cat);
+
+    const before = budgetState(monthOf(date), currency, cat);
+    let okMsg;
+    if (state.form.editingId) {
+      const e = state.expenses.find(x => x.id === state.form.editingId);
+      if (e) Object.assign(e, { amount, currency, date, note, category: cat, updatedAt: Date.now() });
+      okMsg = t('updated');
+    } else {
+      state.expenses.push({
+        id: Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
+        amount, currency, date, note, category: cat, createdAt: Date.now()
+      });
+      okMsg = t('saved');
+    }
+    persist('expenses');
+    const alert = budgetAlert(before, budgetState(monthOf(date), currency, cat), currency, cat);
+    if (alert) toast(`${okMsg} ⚠ ${alert.msg}`, alert.kind, 5000);
+    else toast(okMsg);
+    resetForm();
+    refresh();
+  }
+
+  function startEdit(id) {
+    const e = state.expenses.find(x => x.id === id);
+    if (!e) return;
+    state.form = { editingId: id, cat: e.category, manual: false, source: 'saved', errorKey: null };
+    $('amount').value = fmtPlain(e.amount);
+    $('formCurrency').value = e.currency;
+    $('date').value = e.date;
+    $('note').value = e.note;
+    $('cancelEdit').hidden = false;
+    showError(null);
+    applyStaticTexts();
+    renderChips();
+    $('formCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setTimeout(() => $('amount').focus({ preventScroll: true }), 300);
+  }
+
+  // ---------- Megerősítés, törlés ----------
+  function openConfirm({ title, what, text, yes, onYes }) {
+    $('confirmTitle').textContent = title;
+    $('confirmWhat').textContent = what || '';
+    $('confirmWhat').hidden = !what;
+    $('confirmText').textContent = text;
+    $('confirmYes').textContent = yes;
+    state.confirmAction = onYes;
+    openOverlay('confirmOverlay', 'confirmNo');
+  }
+
+  function askDelete(id) {
+    const e = state.expenses.find(x => x.id === id);
+    if (!e) return;
+    state.pendingDelete = id;
+    openConfirm({
+      title: t('confirmDeleteTitle'), text: t('confirmDeleteText'), yes: t('confirmDelete'),
+      what: `${fmtDate(e.date)} · ${fmtMoney(e.amount, e.currency)}${e.note ? ' · ' + e.note : ''}`,
+      onYes: doDelete
+    });
+  }
+  function doDelete() {
+    const id = state.pendingDelete;
+    state.expenses = state.expenses.filter(x => x.id !== id);
+    if (state.form.editingId === id) resetForm();
+    persist('expenses');
+    closeOverlay('confirmOverlay');
+    toast(t('deleted'));
+    refresh();
+  }
+
+  function askReset() {
+    openConfirm({ title: t('resetTitle'), text: t('resetText')(state.expenses.length), yes: t('resetYes'), onYes: doReset });
+  }
+  function doReset() {
+    state.expenses = [];
+    state.learned = [];
+    state.customCats = [];
+    state.budgets = {};
+    ['expenses', 'learned', 'customCats', 'budgets'].forEach(persist);
+    buildKwIndex();
+    Object.assign(state, { viewMonth: monthOf(todayStr()), listAll: false, filterCat: 'all', search: '', chartCurrency: null, closedBanner: null });
+    $('fSearch').value = '';
+    resetForm();
+    $('confirmOverlay').classList.remove('open');
+    $('settingsOverlay').classList.remove('open');
+    renderAll();
+    toast(t('resetDone'));
+    $('openSettings').focus();
+  }
+
+  // ---------- Saját kategóriák ----------
+  function addCategory() {
+    const name = $('newCatName').value.trim();
+    const err = $('catError');
+    const fail = key => { err.textContent = t(key); err.hidden = false; $('newCatName').setAttribute('aria-invalid', 'true'); $('newCatName').focus(); };
+    if (!name) return fail('errCatName');
+    const n = normalize(name);
+    const exists = allCats().some(c => normalize(catName(c)) === n) ||
+      Object.values(I18N).some(L => Object.values(L.cats).some(x => normalize(x) === n));
+    if (exists) return fail('errCatExists');
+    err.hidden = true;
+    $('newCatName').removeAttribute('aria-invalid');
+    const keywords = $('newCatKw').value.split(/[,;]/).map(s => s.trim()).filter(Boolean).slice(0, 40);
+    state.customCats.push({ id: 'c_' + Date.now().toString(36), name, icon: state.newCat.icon, color: state.newCat.color, keywords });
+    persist('customCats');
+    buildKwIndex();
+    $('newCatName').value = '';
+    $('newCatKw').value = '';
+    renderAll();
+    if (!state.form.manual && !state.form.editingId) onNoteInput();
+    toast(t('catAdded'));
+  }
+  function askCatDelete(id) {
+    const c = customCat(id);
+    if (!c) return;
+    const n = state.expenses.filter(e => e.category === id).length;
+    openConfirm({ title: t('confirmCatDeleteTitle')(c.name), text: t('confirmCatDeleteText')(n), yes: t('delete'), onYes: () => doCatDelete(id) });
+  }
+  function doCatDelete(id) {
+    state.expenses.forEach(e => { if (e.category === id) e.category = 'other'; });
+    state.learned = state.learned.filter(e => e.c !== id);
+    Object.values(state.budgets).forEach(b => { if (b.cats) delete b.cats[id]; });
+    state.customCats = state.customCats.filter(c => c.id !== id);
+    ['expenses', 'learned', 'customCats', 'budgets'].forEach(persist);
+    buildKwIndex();
+    if (state.form.cat === id) state.form.cat = 'other';
+    closeOverlay('confirmOverlay');
+    renderAll();
+    toast(t('catDeleted'));
+  }
+
+  // ---------- Keret beállítása ----------
+  function onBudgetChange(ev) {
+    const el = ev.target;
+    if (!el.matches('[data-budget], [data-budget-cat]')) return;
+    const cur = state.budgetCur;
+    const b = state.budgets[cur] = state.budgets[cur] || {};
+    b.cats = b.cats || {};
+    const raw = el.value.trim();
+    let value = null;
+    if (raw) {
+      const p = parseAmount(raw);
+      if (p.error) { el.setAttribute('aria-invalid', 'true'); toast(t('errInvalid'), 'danger', 3500); return; }
+      value = Number(p.value.toFixed(digits(cur)));
+    }
+    el.removeAttribute('aria-invalid');
+    if (el.dataset.budget === 'total') { if (value == null) delete b.total; else b.total = value; }
+    else { if (value == null) delete b.cats[el.dataset.budgetCat]; else b.cats[el.dataset.budgetCat] = value; }
+    if (value != null) el.value = fmtPlain(value);
+    persist('budgets');
+    renderSummary();
+    renderHistory();
+    toast(t('budgetSaved'));
+  }
+
+  // ---------- CSV ----------
+  function csvCell(v) {
+    const s = String(v);
+    return /[",;\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+  }
+  function buildCsv() {
+    const rows = [['date', 'amount', 'currency', 'category_id', 'category', 'note']];
+    state.expenses.slice().sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : a.createdAt - b.createdAt))
+      .forEach(e => rows.push([e.date, e.amount.toFixed(digits(e.currency)), e.currency, e.category, catName(e.category), e.note]));
+    return rows.map(r => r.map(csvCell).join(',')).join('\r\n');
+  }
+  function exportCsv() {
+    if (!state.expenses.length) { toast(t('exportEmpty')); return; }
+    downloadCsv(buildCsv(), `kiadasok-${todayStr()}.csv`);
+  }
+  async function downloadCsv(text, filename) {
+    // A claude.ai-n közzétett változatban a böngésző letiltja a sima letöltést, ott a downloads képességgel mentünk
+    if (window.claude && window.claude.use) {
+      const downloads = await window.claude.use('downloads');
+      if (downloads) {
+        try {
+          await downloads.save({ filename, data: '﻿' + text });
+          toast(t('exported'));
+        } catch (e) {
+          if (e && e.code !== 'declined') toast(e.message || 'CSV', 'danger', 3500);
+        }
+        return;
+      }
+    }
+    const blob = new Blob(['﻿' + text], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    toast(t('exported'));
+  }
+
+  // Havi összesítők: hónaponként és pénznemenként egy sor, kategóriánkénti bontással
+  function buildMonthlyCsv() {
+    const current = monthOf(todayStr());
+    const cats = allCats();
+    const rows = [['month', 'status', 'currency', 'total', 'budget', 'items', ...cats.map(c => customCat(c) ? catName(c) : c)]];
+    [...new Set(state.expenses.map(e => monthOf(e.date)))].sort().forEach(m => {
+      const items = monthExpenses(m);
+      sortCurrencies([...new Set(items.map(e => e.currency))]).forEach(c => {
+        const sub = items.filter(e => e.currency === c);
+        const d = digits(c);
+        const sum = list => list.reduce((s, e) => s + e.amount, 0).toFixed(d);
+        const lim = getBudget(c).total;
+        rows.push([m, m < current ? 'closed' : 'in_progress', c, sum(sub), lim != null ? lim.toFixed(d) : '', sub.length,
+          ...cats.map(cat => sum(sub.filter(e => e.category === cat)))]);
+      });
+    });
+    return rows.map(r => r.map(csvCell).join(',')).join('\r\n');
+  }
+  function exportMonthlyCsv() {
+    if (!state.expenses.length) { toast(t('exportEmpty')); return; }
+    downloadCsv(buildMonthlyCsv(), `havi-osszesitok-${todayStr()}.csv`);
+  }
+
+  function goToMonth(m) {
+    if (!m) return;
+    state.viewMonth = m;
+    state.listAll = false;
+    refresh();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ---------- Felugró ablakok, értesítés ----------
+  let lastFocus = null;
+  function openOverlay(id, focusId) {
+    lastFocus = document.activeElement;
+    $(id).classList.add('open');
+    setTimeout(() => $(focusId).focus(), 0);
+  }
+  function closeOverlay(id) {
+    $(id).classList.remove('open');
+    if (lastFocus && lastFocus.isConnected && lastFocus.focus) lastFocus.focus({ preventScroll: true });
+  }
+  function openSettings(tab) {
+    if (tab) state.settingsTab = tab;
+    renderSettings();
+    openOverlay('settingsOverlay', 'closeSettingsX');
+  }
+  let toastTimer = null;
+  function toast(msg, kind, ms) {
+    const el = $('toast');
+    el.textContent = msg;
+    el.className = 'toast show' + (kind ? ' ' + kind : '');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), ms || 2200);
+  }
+
+  // ---------- Események ----------
+  $('form').addEventListener('submit', onSubmit);
+  $('note').addEventListener('input', onNoteInput);
+  $('amount').addEventListener('input', () => { if (state.form.errorKey && state.form.errorKey !== 'errDate') showError(null); });
+  $('date').addEventListener('input', () => { if (state.form.errorKey === 'errDate') showError(null); });
+  $('chips').addEventListener('click', ev => {
+    const b = ev.target.closest('[data-cat]');
+    if (!b) return;
+    state.form.cat = b.dataset.cat;
+    state.form.manual = true;
+    renderChips();
+  });
+  $('cancelEdit').addEventListener('click', resetForm);
+
+  $('prevMonth').addEventListener('click', () => { state.viewMonth = shiftMonth(state.viewMonth, -1); refresh(); });
+  $('nextMonth').addEventListener('click', () => { state.viewMonth = shiftMonth(state.viewMonth, 1); refresh(); });
+  $('todayMonth').addEventListener('click', () => { state.viewMonth = monthOf(todayStr()); refresh(); });
+  $('chartCurrency').addEventListener('click', ev => {
+    const b = ev.target.closest('[data-chartcur]');
+    if (b) { state.chartCurrency = b.dataset.chartcur; renderSummary(); }
+  });
+  $('budgetBox').addEventListener('click', ev => { if (ev.target.closest('[data-open-budget]')) openSettings('budget'); });
+
+  $('fMonth').addEventListener('change', ev => {
+    if (ev.target.value === 'all') state.listAll = true;
+    else { state.listAll = false; state.viewMonth = ev.target.value; renderSummary(); renderHistory(); }
+    renderList();
+  });
+  $('history').addEventListener('click', ev => {
+    const b = ev.target.closest('[data-month]');
+    if (b) goToMonth(b.dataset.month);
+  });
+  $('bannerView').addEventListener('click', () => goToMonth(state.closedBanner));
+  $('bannerClose').addEventListener('click', () => { state.closedBanner = null; renderBanner(); });
+  $('exportMonthlyBtn').addEventListener('click', exportMonthlyCsv);
+  $('exportMonthlyBtn2').addEventListener('click', exportMonthlyCsv);
+  $('fCat').addEventListener('change', ev => { state.filterCat = ev.target.value; renderList(); });
+  $('fSearch').addEventListener('input', ev => { state.search = ev.target.value; renderList(); });
+  $('items').addEventListener('click', ev => {
+    const ed = ev.target.closest('[data-edit]');
+    if (ed) return startEdit(ed.dataset.edit);
+    const del = ev.target.closest('[data-del]');
+    if (del) askDelete(del.dataset.del);
+  });
+  $('exportBtn').addEventListener('click', exportCsv);
+  $('exportBtn2').addEventListener('click', exportCsv);
+
+  $('openSettings').addEventListener('click', () => openSettings());
+  $('closeSettings').addEventListener('click', () => closeOverlay('settingsOverlay'));
+  $('closeSettingsX').addEventListener('click', () => closeOverlay('settingsOverlay'));
+  $('settingsOverlay').addEventListener('click', ev => {
+    const tab = ev.target.closest('[data-tab]');
+    if (tab) { state.settingsTab = tab.dataset.tab; renderSettings(); return; }
+    const set = ev.target.closest('[data-set]');
+    if (set) {
+      const key = set.dataset.set, val = set.dataset.val;
+      state.settings[key] = val;
+      if (key === 'pattern') state.settings.scene = 'none';
+      persist('settings');
+      if (key === 'currency') { state.budgetCur = val; if (!state.form.editingId) $('formCurrency').value = val; }
+      renderAll();
+      return;
+    }
+    const ic = ev.target.closest('[data-newicon]');
+    if (ic) { state.newCat.icon = ic.dataset.newicon; renderCatManager(); return; }
+    const col = ev.target.closest('[data-newcolor]');
+    if (col) { state.newCat.color = col.dataset.newcolor; renderCatManager(); return; }
+    const dc = ev.target.closest('[data-delcat]');
+    if (dc) { askCatDelete(dc.dataset.delcat); return; }
+    const bc = ev.target.closest('[data-budgetcur]');
+    if (bc) { state.budgetCur = bc.dataset.budgetcur; renderBudgetSettings(); }
+  });
+  $('settingsOverlay').addEventListener('change', onBudgetChange);
+  $('addCatBtn').addEventListener('click', addCategory);
+  $('newCatName').addEventListener('keydown', ev => { if (ev.key === 'Enter') { ev.preventDefault(); addCategory(); } });
+  $('newCatName').addEventListener('input', () => { $('catError').hidden = true; $('newCatName').removeAttribute('aria-invalid'); });
+  $('resetBtn').addEventListener('click', askReset);
+  $('bgFile').addEventListener('change', onBgFile);
+  $('bgRemove').addEventListener('click', removeCustomBg);
+
+  $('confirmNo').addEventListener('click', () => closeOverlay('confirmOverlay'));
+  $('confirmYes').addEventListener('click', () => { if (state.confirmAction) state.confirmAction(); });
+  document.querySelectorAll('.overlay').forEach(o => o.addEventListener('click', ev => { if (ev.target === o) closeOverlay(o.id); }));
+  document.addEventListener('keydown', ev => {
+    if (ev.key !== 'Escape') return;
+    const open = [...document.querySelectorAll('.overlay.open')];
+    if (open.length) closeOverlay(open[open.length - 1].id);
+  });
+  $('fab').addEventListener('click', () => {
+    $('formCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setTimeout(() => $('amount').focus({ preventScroll: true }), 300);
+  });
+
+  // ---------- Indítás ----------
+  try { localStorage.setItem('hk.test', '1'); localStorage.removeItem('hk.test'); } catch (e) { storageOk = false; }
+  $('storageWarn').hidden = storageOk;
+  $('date').value = todayStr();
+  buildKwIndex();
+  // Hónapváltás után az első megnyitáskor megjelenik az előző (lezárt) hónap összesítője
+  (function checkMonthClosed() {
+    const current = monthOf(todayStr());
+    const lastSeen = load('lastSeenMonth', null);
+    if (lastSeen && lastSeen < current) {
+      const prev = shiftMonth(current, -1);
+      if (monthExpenses(prev).length) state.closedBanner = prev;
+    }
+    state.lastSeenMonth = current;
+    persist('lastSeenMonth');
+  })();
+  renderAll();
+  $('formCurrency').value = state.settings.currency;
+
+  // Teszteléshez
+  window.__kiadas = { suggest, keywordCategory, parseAmount, buildCsv, buildMonthlyCsv, state };
+})();
+</script>
+<script>
+  // Offline működés: a service worker eltárolja az alkalmazást az első megnyitáskor
+  if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0) {
+    window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
+  }
+</script></body>
+</html>
